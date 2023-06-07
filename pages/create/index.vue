@@ -6,7 +6,9 @@
 		</uni-group>
 		<uni-group title="详细信息" mode="card">
 			<uni-forms ref="Form" :rules="FormRules" :model="FormData" :border="true" label-position="top">
-				<uni-icons type="location" size="30"></uni-icons>
+				<uni-easyinput prefixIcon="location" v-model="FormData.location" placeholder="点击左侧图标选择位置 或 手动输入"
+					maxlength="60" clearable @iconClick="getLocation()"></uni-easyinput>
+				
 				<uni-forms-item label="日期时间" required>
 					<uni-datetime-picker type="datetime" return-type="timestamp" v-model="FormData.datetime"/>
 				</uni-forms-item>
@@ -38,12 +40,12 @@
 						"radius":"8%" 		// 边框圆角，支持百分比
 					}
 				},
+				imageBase64:'',
 				OtherReport:false,
 				OtherReportValue:'',
 				FormData:{
 					title:'',
 					describe:'',
-					picture:'',
 					licensePlateNum:'',
 					datetime:'',
 					carType:'',
@@ -90,8 +92,77 @@
 			}
 		},
 		methods: {
+			async postImage() {
+				const request = require('request')
+				const AK = "G5Z8oHQ4qbBefmdRjFUBL4yo"
+				const SK = "ejzzFY6NRen107zVQQYtZytGY6cxWV3G"
+			    var options = {
+			        'method': 'POST',
+			        'url': 'https://aip.baidubce.com/rest/2.0/ocr/v1/license_plate?access_token=' + await getAccessToken(),
+			        'headers': {
+			                'Content-Type': 'application/x-www-form-urlencoded',
+			                'Accept': 'application/json'
+			        },
+			        form: {
+						'image': this.imageBase64,
+						//'multi_detect'
+						//'multi_scale'
+			        }
+			    };
+			
+			    request(options, function (error, response) {
+			        if (error) throw new Error(error);
+			        console.log(response.body);
+			    });
+			},
+			/**
+			 * 使用 AK，SK 生成鉴权签名（Access Token）
+			 * @return string 鉴权签名信息（Access Token）
+			 */
+			getAccessToken() {
+				const request = require('request')
+				const AK = "G5Z8oHQ4qbBefmdRjFUBL4yo"
+				const SK = "ejzzFY6NRen107zVQQYtZytGY6cxWV3G"
+			    let options = {
+			        'method': 'POST',
+			        'url': 'https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=' + AK + '&client_secret=' + SK,
+			    }
+			    return new Promise((resolve, reject) => {
+			        request(options, (error, response) => {
+			            if (error) { reject(error) }
+			            else { resolve(JSON.parse(response.body).access_token) }
+			        })
+			    })
+			},
+
 			getLocation(){
-				
+				let that=this 
+				console.log(11)
+				uni.getLocation({
+					type: 'gcj02',
+					highAccuracyExpireTime: 3500,
+					isHighAccuracy: true,
+					success: function (res) {
+						const latitude = res.latitude;
+						const longitude = res.longitude;
+						console.log('当前位置的经度：' + res.longitude);
+						console.log('当前位置的纬度：' + res.latitude);
+						uni.chooseLocation({
+							latitude: latitude,
+							longitude: longitude,
+							success: function (res) {
+								console.log('位置名称：' + res.name);
+								console.log('详细地址：' + res.address);
+								console.log('纬度：' + res.latitude);
+								console.log('经度：' + res.longitude);
+								that.location=res.address
+							}
+						});
+					},
+					fail: function(){
+						
+					}
+				});
 			},
 			setInverted(item) {
 				item.inverted = !item.inverted
@@ -135,4 +206,5 @@ page {
 .reports{
 	
 }
+
 </style>

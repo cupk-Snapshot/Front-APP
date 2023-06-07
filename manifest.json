@@ -43,6 +43,11 @@
                 "geolocation" : {
                     "system" : {
                         "__platform__" : [ "ios", "android" ]
+                    },
+                    "amap" : {
+                        "__platform__" : [ "ios", "android" ],
+                        "appkey_ios" : "",
+                        "appkey_android" : ""
                     }
                 },
                 "maps" : {}
@@ -70,10 +75,19 @@
             "port" : 9090,
             "https" : false
         },
-        "title" : "RuoYi-App",
+        "title" : "随手拍",
         "router" : {
             "mode" : "hash",
             "base" : "./"
+        },
+        "sdkConfigs" : {
+            "maps" : {
+                "amap" : {
+                    "key" : "3441b32aeb96687acd3abef3037fc25c",
+                    "securityJsCode" : "9d0c048f467638d3544e91807aa50d5d",
+                    "serviceHost" : ""
+                }
+            }
         }
     }
 }
