@@ -3,7 +3,7 @@
     <view class="logo-content align-center justify-center flex">
       <image style="width: 100rpx;height: 100rpx;" :src="globalConfig.appInfo.logo" mode="widthFix">
       </image>
-      <text class="title">若依移动端登录</text>
+      <text class="title">您好，请登录</text>
     </view>
     <view class="login-form-content">
       <view class="input-item flex align-center">
@@ -55,16 +55,6 @@
       this.getCode()
     },
     methods: {
-      // 隐私协议
-      handlePrivacy() {
-        let site = this.globalConfig.appInfo.agreements[0]
-        this.$tab.navigateTo(`/pages/common/webview/index?title=${site.title}&url=${site.url}`)
-      },
-      // 用户协议
-      handleUserAgrement() {
-        let site = this.globalConfig.appInfo.agreements[1]
-        this.$tab.navigateTo(`/pages/common/webview/index?title=${site.title}&url=${site.url}`)
-      },
       // 获取图形验证码
       getCode() {
         getCodeImg().then(res => {
