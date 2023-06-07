@@ -1,29 +1,26 @@
 <template>
 	<view>
-		<uni-forms ref="Form" :rules="FormRules" :model="FormData" :border="true" label-position="top">
-			<!--
-			<uni-forms-item label="标题">
-				<uni-easyinput v-model="FormData.name" placeholder="请输入标题" />
-			</uni-forms-item>
-			-->
-			<uni-forms-item label="举报图片" required>
-				<uni-file-picker limit="3" title="最多选择3张图片" mode="grid" :image-styles="ImageStyles"></uni-file-picker>
-			</uni-forms-item>
-			<uni-icons type="location" size="30"></uni-icons>
-			<uni-forms-item label="日期时间" required>
-				<uni-datetime-picker type="datetime" return-type="timestamp" v-model="FormData.datetime"/>
-			</uni-forms-item>
-			<uni-forms-item label="举报类别" required name="reports">
-				<view>
-					<uni-tag class="reports" v-for="item in FormData.reports" :circle="true" :inverted="item.inverted" 
-						:text="item.text" type="primary" @click="setInverted(item)"/>
-					<uni-easyinput class="reports" v-if="OtherReport" :value="OtherReportValue" placeholder="请输入内容"></uni-easyinput>
-				</view>
-				
-			</uni-forms-item>
-			
+		<uni-group title="举报图片" mode="card">
+			<uni-file-picker :auto-upload="false" limit="3" title="最多选择3张图片" mode="grid" :image-styles="ImageStyles"></uni-file-picker>
+			<button type="primary" size="mini" @click="upload()">上传文件</button>
+		</uni-group>
+		<uni-group title="详细信息" mode="card">
+			<uni-forms ref="Form" :rules="FormRules" :model="FormData" :border="true" label-position="top">
+				<uni-icons type="location" size="30"></uni-icons>
+				<uni-forms-item label="日期时间" required>
+					<uni-datetime-picker type="datetime" return-type="timestamp" v-model="FormData.datetime"/>
+				</uni-forms-item>
+				<uni-forms-item label="举报类别" required name="reports">
+					<view>
+						<uni-tag class="reports" v-for="item in FormData.reports" :circle="true" :inverted="item.inverted" 
+							:text="item.text" type="primary" @click="setInverted(item)"/>
+					</view>
+					<uni-easyinput v-if="OtherReport" :value="OtherReportValue" placeholder="请输入内容"></uni-easyinput>
+				</uni-forms-item>
 			</uni-forms>
-			<button type="primary" @click="submit('FormData')">提交</button>
+				<button type="primary" @click="submit('FormData')">提交</button>
+		</uni-group>
+
 	</view>
 </template>
 
@@ -93,6 +90,9 @@
 			}
 		},
 		methods: {
+			getLocation(){
+				
+			},
 			setInverted(item) {
 				item.inverted = !item.inverted
 				if(item.text=='其他'){
@@ -133,6 +133,6 @@ page {
 	background-color: #fff;
 }
 .reports{
-	margin: 5px 5px 5px 5px;
+	
 }
 </style>

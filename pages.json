@@ -14,8 +14,6 @@
     "path": "pages/create/index",
     "style": {
       "navigationBarTitleText": "随手拍"
-	  
-	  
     }
   },{
     "path": "pages/mine/index",
@@ -101,8 +99,6 @@
 		"text": "随手拍"
 	},
 
-	
-	
   "globalStyle": {
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "RuoYi",
