@@ -30,10 +30,15 @@
     "style": {
       "navigationBarTitleText": "个人信息"
     }
-  }, {
-    "path": "pages/mine/info/edit",
+  },{
+    "path": "pages/mine/info/edit_index",
     "style": {
       "navigationBarTitleText": "编辑资料"
+    }
+  },{
+    "path": "pages/mine/info/edit",
+    "style": {
+      "navigationBarTitleText": "编辑个人信息"
     }
   }, {
     "path": "pages/mine/pwd/index",
@@ -54,9 +59,18 @@
     "path": "pages/mine/about/index",
     "style": {
       "navigationBarTitleText": "关于我们"
+	  }
+  }, {
+    "path": "pages/mine/exchange/index",
+    "style": {
+      "navigationBarTitleText": "积分兑换"
     }
-  }
-],
+  }, {
+    "path": "pages/mine/exchange/detail",
+    "style": {
+      "navigationBarTitleText": "积分明细"
+    }
+  }],
   "tabBar": {
     "color": "#000000",
     "selectedColor": "#409eff",

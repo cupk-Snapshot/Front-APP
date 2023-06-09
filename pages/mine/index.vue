@@ -28,20 +28,20 @@
     <view class="content-section">
       <view class="mine-actions grid col-4 text-center">
         <view class="action-item" @click="handleJiaoLiuQun">
-          <view class="iconfont icon-friendfill text-pink icon"></view>
-          <text class="text">交流群</text>
+          <view class="iconfont_mine icon-gaojingguize text-blue icon"></view>
+          <text class="text">违法规则</text>
         </view>
         <view class="action-item" @click="handleBuilding">
-          <view class="iconfont icon-service text-blue icon"></view>
-          <text class="text">在线客服</text>
+          <view class="iconfont_mine icon-weifaguizeguanli text-blue icon"></view>
+          <text class="text">奖励规则</text>
         </view>
         <view class="action-item" @click="handleBuilding">
-          <view class="iconfont icon-community text-mauve icon"></view>
-          <text class="text">反馈社区</text>
+          <view class="iconfont_mine icon-jubao text-blue icon"></view>
+          <text class="text">我的举报</text>
         </view>
-        <view class="action-item" @click="handleBuilding">
-          <view class="iconfont icon-dianzan text-green icon"></view>
-          <text class="text">点赞我们</text>
+        <view class="action-item" @click="handlejifenduihuan">
+          <view class="iconfont_mine icon-jifen text-blue icon"></view>
+          <text class="text">积分兑换</text>
         </view>
       </view>
 
@@ -99,7 +99,7 @@
         this.$tab.navigateTo('/pages/mine/info/index')
       },
       handleToEditInfo() {
-        this.$tab.navigateTo('/pages/mine/info/edit')
+        this.$tab.navigateTo('/pages/mine/info/edit_index')
       },
       handleToSetting() {
         this.$tab.navigateTo('/pages/mine/setting/index')
@@ -126,8 +126,8 @@
       handleJiaoLiuQun() {
         this.$modal.showToast('QQ群：133713780')
       },
-      handleBuilding() {
-        this.$modal.showToast('模块建设中~')
+      handlejifenduihuan() {
+        this.$tab.navigateTo('/pages/mine/exchange/index')
       }
     }
   }
