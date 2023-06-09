@@ -2,7 +2,8 @@
 	<view>
 		<uni-group title="举报图片" mode="card">
 			<uni-file-picker ref="files" :auto-upload="false" limit="6" title="最多上传6张图片"
-			file-mediatype="image" mode="grid" :image-styles="ImageStyles" :value="img"></uni-file-picker>
+			file-mediatype="image" mode="grid" :image-styles="ImageStyles" :value="img"
+			 @select="handleSelect" @delete="handleDelete" @success="success"></uni-file-picker>
 			<button type="primary" size="mini" @click="upload()">上传文件</button>
 		</uni-group>
 		<button @click="carInputClick">打开车牌输入</button>
@@ -104,6 +105,43 @@
 		    }
 		},
 		methods: {
+			async handleSelect(res) { // 上传图片
+			    await this.uploadImg(res.tempFilePaths,1);
+			},
+			async uploadImg(tempFilePaths, token) {
+			    console.log(token)
+			    if (!tempFilePaths.length) return;
+			    const path = tempFilePaths.pop();
+			    this.filePathsList.push({url:path,name:""})
+			    const [err, {data}] = await uni.uploadFile({
+			        url: '',
+			        filePath: path,
+			        name: 'file',
+			        header: {
+			            Authorization: token,
+			            "Content-Type": "multipart/form-data",
+			        }
+			    });
+			    console.log("err", err)
+			    console.log("data", data)
+			    if (!this.isGuid(data)) {
+			        // upload fail
+			        this.filePathsList.pop()
+			        uni.showToast({
+			            title: "上传失败",
+			            icon: "none"
+			        })
+			    }else{
+			        // upload success
+			        this.filePathsList[this.filePathsList.length - 1].name = data
+			    }
+			    this.uploadImg(tempFilePaths,token);
+			},
+			handleDelete(err) { // 删除图片
+			    const num = this.filePathsList.findIndex(v => v.url === err.tempFilePath);
+			    this.filePathsList.splice(num, 1);
+			},
+
 			upload(){
 				this.$refs.files.upload()
 			},
