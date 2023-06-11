@@ -14,6 +14,8 @@
 			</view>
 			<uni-icons type="compose" size="16" @click="editAddress(item)"></uni-icons>
 			<text class="" @tap="editAddress(item)">编辑</text>
+			<uni-icons type="compose" size="16" @click="handleRemove(item.id)"></uni-icons>
+			<text class="" @tap="handleRemove(item.id)">删除</text>
 		</view>
 		
 		<button class="add-btn" @tap="addAddress()">新增地址</button>
@@ -44,6 +46,30 @@
 				uni.navigateTo({
 					url: '/pages/mine/exchange/add_address?id='+id
 					})
+			},
+			//删除地址
+			handleRemove(addressId) {
+				const that = this
+				uni.showModal({
+					title: "提示",
+					content: "您确定要删除当前收货地址吗?",
+					success: function (res) {
+			    		if (res.confirm) {
+							var list =that.addressList;
+							const item = list.filter(address => address.id !== addressId);
+							that.$dataLocal("address",item);
+							uni.showToast({
+								title: '删除成功',
+								duration: 2000
+							});
+							that.loadAddress()
+			    		}
+						else if (res.cancel) {
+			    			console.log('用户点击取消');
+			    		}	
+			    	}
+			  });
+					
 			},
 			//选择地址
 			checkAddress(item){
