@@ -1,13 +1,18 @@
 <template>
 	<view>
-		<uni-group title="举报图片" mode="card">
+		<uni-group title="举报信息" mode="card">
 			<uni-file-picker ref="files" :auto-upload="false" limit="6" title="最多上传6张图片"
 			file-mediatype="image" mode="grid" :image-styles="ImageStyles" :value="img"
 			 @select="handleSelect" @delete="handleDelete" @success="success"></uni-file-picker>
 			<button type="primary" size="mini" @click="upload()">上传文件</button>
+			<view class="cu-form-group">
+				<view class="title" @tap="plateShow = true">车牌号</view>
+				<input placeholder="请点此输入" disabled="inputDisabled" @tap="plateShow = true" v-model.trim="plateNo" />
+				<plate-input v-if="plateShow" :plate="plateNo" @export="setPlate" @close="plateShow = false" />
+			</view>
 		</uni-group>
-		<button @click="carInputClick">打开车牌输入</button>
-		<keyboard-plate ref="plateNumber" :plateNum.sync='plateNum' @change="getPlateNum"  isShow></keyboard-plate>
+		
+		
 		<uni-group title="详细信息" mode="card">
 			<uni-forms ref="Form" :rules="FormRules" :model="FormData" :border="true" label-position="left">
 				
@@ -21,8 +26,8 @@
 					<uni-datetime-picker type="datetime" return-type="timestamp" v-model="FormData.datetime"/>
 				</uni-forms-item>
 				<uni-forms-item label="类别" required name="reports">
-						<uni-tag class="reports" v-for="item in FormData.reports" :circle="true" :inverted="item.inverted" 
-							:text="item.text" type="primary" @click="setInverted(item)"/>
+					<uni-tag class="reports" v-for="item in FormData.reports" :circle="true" :inverted="item.inverted" 
+						:text="item.text" type="primary" @click="setInverted(item)"/>
 				</uni-forms-item>
 				<uni-easyinput v-if="OtherReport" :value="OtherReportValue" placeholder="请输入内容"></uni-easyinput>
 			</uni-forms>
@@ -33,7 +38,11 @@
 </template>
 
 <script>
+	import plateInput from '@/components/uni-plate-input/uni-plate-input.vue'
 	export default {
+		components: {
+			plateInput
+		},
 		data() {
 			return {
 				ImageStyles:{
@@ -51,7 +60,9 @@
 				imageBase64:'',
 				OtherReport:false,
 				OtherReportValue:'',
-				plateNum:'',
+				plateNo: '',
+				plateShow: false,
+				inputDisabled: true,
 				FormData:{
 					title:'',
 					describe:'',
@@ -99,12 +110,11 @@
 				
 			}
 		},
-		watch:{
-		    plateNum(e){
-		        console.log(e)
-		    }
-		},
 		methods: {
+			setPlate(plate) {
+				if (plate.length >= 7) this.plateNo = plate;
+				this.plateShow = false;
+			},
 			async handleSelect(res) { // 上传图片
 			    await this.uploadImg(res.tempFilePaths,1);
 			},
@@ -141,17 +151,8 @@
 			    const num = this.filePathsList.findIndex(v => v.url === err.tempFilePath);
 			    this.filePathsList.splice(num, 1);
 			},
-
 			upload(){
 				this.$refs.files.upload()
-			},
-			//获取车牌
-			getPlateNum(e){
-				console.log('车牌号是：'+ e.value)
-			},
-			// 打开车牌选择器
-			carInputClick() {
-				this.$refs.plateNumber.open();
 			},
 			async postImage() {
 				const request = require('request')
@@ -212,8 +213,6 @@
 							longitude: longitude,
 							success: function (res) {
 								console.log('详细地址：' + res.address);
-								console.log('纬度：' + res.latitude);
-								console.log('经度：' + res.longitude);
 								that.FormData.location=res.address
 							}
 						});
@@ -264,5 +263,17 @@ page {
 .reports{
 	
 }
-
+.cu-form-group {
+	border: 1px solid #eee;
+	border-radius: 10%;
+	background-color: #ffffff;
+	padding: 1upx 30upx;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	align-items: center;
+	min-height: 100upx;
+	justify-content: space-between;
+}
 </style>

@@ -2,7 +2,7 @@
 	<view>
 		<view class="inputView">
 			<text class="leftTitle">{{leftTitle}}</text>
-			<input class="picker" :name="name" v-model="value" :placeholder="placeholder" disabled="true"
+			<input class="picker" :name="name" v-model="value" :placeholder="placeholder" disabled="false"
 				@click="chooseClick" />
 			<image class="arrowImg0" mode="aspectFit" src="./arrow_right.png"></image>
 		</view>

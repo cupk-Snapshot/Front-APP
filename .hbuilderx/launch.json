@@ -4,6 +4,13 @@
         {
             "playground" : "custom",
             "type" : "uni-app:app-android"
-        }
+        },
+	{
+		"h5" : 
+		{
+			"launchtype" : "local"
+		},
+		"type" : "uniCloud"
+	}
     ]
 }
