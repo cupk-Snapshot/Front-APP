@@ -63,14 +63,41 @@
   }, {
     "path": "pages/mine/exchange/index",
     "style": {
-      "navigationBarTitleText": "积分兑换"
-    }
+      "navigationBarTitleText": "积分兑换",
+	  "enablePullDownRefresh": false,
+	  "app-plus": {
+		"titleNView": {
+			"buttons": [{
+				"text": "&#xe608;",
+				"fontSrc": "/static/font/iconfont_set.ttf",
+				"fontSize": "23",
+				"float": "right"
+			}]
+		}
+	  }
+	}
   }, {
     "path": "pages/mine/exchange/detail",
     "style": {
       "navigationBarTitleText": "积分明细"
     }
-  }],
+  }, {
+    "path" : "pages/mine/exchange/settings",
+    "style" :{
+            "navigationBarTitleText": "设置收货信息",
+            "enablePullDownRefresh": false
+            }  
+  }
+        ,{
+            "path" : "pages/mine/exchange/add_address",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+    ],
   "tabBar": {
     "color": "#000000",
     "selectedColor": "#409eff",

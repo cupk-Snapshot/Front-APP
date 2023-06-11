@@ -12,10 +12,24 @@
 						</view>
 					</view>
 				</view>
-				<view class="t-jf-history" hover-class="t-hc" @click="toMall">
+				<view class="t-jf-history" hover-class="t-hc" @click="toHistory">
 					兑换历史
 				</view>
 			</view>
+		</view>
+		<view class="t-goods" v-if="goodsList&&goodsList.length>0">
+			<view class="t-goods-item" v-for="(item,index) in goodsList" :key="index">
+				<image class="t-goods-img" :src="item.goodsUrl"></image>
+				<view class="t-goods-title t-text-oneline">{{item.goodsDesc}}</view>
+				<view class="t-goods-score t-flex-row-s">
+					<text>{{item.goodsScore}}</text>
+					<text>积分</text>
+				</view>
+				<view class="t-dh t-flex-row" bindtap="toTips" hover-class="t-click-class">我要兑换</view>
+			</view>
+		</view>
+		<view class="t-more t-flex-row">
+			我也是有底线的哦~
 		</view>
 	</view>
 </template>
@@ -24,20 +38,58 @@
 	export default {
 		data() {
 			return {
-				//今日是否签到
-				isSigned: false,
-				//是否显示签到弹框
-				showSignBox: false,
-				//是否显示签到规则弹框
-				showRuleBox: false,
-				//积分规则说明
-				rule: "1.积分规则说明积分规则说明积分规则说明积分规则说明积分规则说明；\n2.积分规则说明积分规则说明积分规则说明积分规则说明积分规则说明；\n3.积分规则说明积分规则说明积分规则说明积分规则说明积分规则说明；\n4.积分规则说明积分规则说明积分规则说明积分规则说明积分规则说明；\n5.积分规则说明积分规则说明积分规则说明积分规则说明积分规则说明。",
+				goodsList: [{
+						goodsUrl: '/static/images/goods/1.png',
+						goodsDesc: '多功能晴雨伞一把',
+						goodsScore: 1000
+					},
+					{
+						goodsUrl: '/static/images/goods/2.png',
+						goodsDesc: '万用充电线一条',
+						goodsScore: 3000
+					},
+					{
+						goodsUrl: '/static/images/goods/3.png',
+						goodsDesc: '保温壶一个',
+						goodsScore: 5000
+					},
+					{
+						goodsUrl: '/static/images/goods/4.png',
+						goodsDesc: '400ML水杯一个',
+						goodsScore: 2000
+					},
+					{
+						goodsUrl: '/static/images/goods/5.png',
+						goodsDesc: '万用切刀一把',
+						goodsScore: 6000
+					},
+					{
+						goodsUrl: '/static/images/goods/6.png',
+						goodsDesc: '小巧手电筒一个',
+						goodsScore: 1000
+					},
+					{
+						goodsUrl: '/static/images/goods/7.png',
+						goodsDesc: '800ML杯子一个',
+						goodsScore: 7000
+					},
+					{
+						goodsUrl: '/static/images/goods/8.png',
+						goodsDesc: '600ML保温杯一个',
+						goodsScore: 12000
+					},
+				]
 			}
 		},
 		onLoad() {
-
 		},
+		onNavigationBarButtonTap(e) {
+				uni.navigateTo({
+					url: `/pages/mine/exchange/settings`
+				})
+			},
 		methods: {
+			
 			//签到点击
 			toSign() {
 				if (!this.isSigned) {
@@ -300,67 +352,6 @@
 		}
 	}
 
-	.t-task {
-		box-sizing: border-box;
-		background: #fff;
-		padding: 0rpx 30rpx;
-
-		.t-title {
-			font-size: 32rpx;
-			color: #000;
-			text-align: center;
-		}
-
-		.t-task-item {
-			display: flex;
-			flex-direction: row;
-			justify-content: space-between;
-			align-items: center;
-			height: 130rpx;
-			box-sizing: border-box;
-			border-bottom: 1rpx solid #cdcdcd;
-
-			.left {
-				.taskname {
-					max-width: 550rpx;
-					overflow: hidden;
-					text-overflow: ellipsis;
-					white-space: nowrap;
-					font-size: 28rpx;
-					color: #333;
-
-					text {
-						color: #18ba7a;
-						margin-left: 10rpx;
-					}
-				}
-
-				.taskdesc {
-					max-width: 510rpx;
-					overflow: hidden;
-					text-overflow: ellipsis;
-					white-space: nowrap;
-					font-size: 26rpx;
-					color: #999;
-					margin-top: 14rpx;
-				}
-			}
-
-			.right {
-				padding: 16rpx 34rpx;
-				border-radius: 50rpx;
-				background-color: #17ba7a;
-				text-align: center;
-				font-size: 28rpx;
-				color: #fff;
-
-				&.finish {
-					background-color: #b8b8b8 !important;
-				}
-			}
-		}
-	}
-
 	.t-o-wrap {
 		width: 100%;
 		position: relative;
@@ -433,5 +424,92 @@
 			margin-top: 40rpx;
 			padding: 10rpx;
 		}
+	}
+	.t-goods {
+			width: 100%;
+			box-sizing: border-box;
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			justify-content: space-between;
+			align-items: flex-start;
+			padding: 16rpx 18rpx 0rpx;
+	}
+	
+	.t-goods-item {
+		width: 350rpx;
+		height: 576rpx;
+		background: #fff;
+		border-radius: 10rpx;
+		margin-top: 14rpx;
+	}
+	
+	.t-goods-img {
+		width: 350rpx;
+		height: 350rpx;
+		border-top-left-radius: 10rpx;
+		border-top-right-radius: 10rpx;
+		display: block;
+	}
+	
+	.t-goods-title {
+		width: 308rpx;
+		margin: 30rpx auto 0rpx;
+		font-size: 28rpx;
+		color: #272727;
+	}
+	
+	.t-goods-score {
+		margin-top: 16rpx;
+		height: 32rpx;
+		line-height: 32rpx;
+		margin-left: 20rpx;
+	}
+	
+	.t-goods-score text:first-child {
+		font-size: 32rpx;
+		color: #D41428;
+		font-weight: bold;
+	}
+	
+	.t-goods-score text:last-child {
+		font-size: 28rpx;
+		color: #17ba7a;
+		margin-left: 4rpx;
+	}
+	
+	.t-dh {
+		width: 310rpx;
+		height: 70rpx;
+		background: #17ba7a;
+		border-radius: 35rpx;
+		font-size: 32rpx;
+		color: #FFFFFF;
+		margin: 20rpx auto 0rpx;
+	}
+	
+	.t-more {
+		font-size: 28rpx;
+		color: #888888;
+		line-height: 40rpx;
+		margin-top: 50rpx;
+		margin-bottom: 85rpx;
+	}
+	.t-click-class {
+		opacity: 0.7;
+	}
+	
+	.t-flex-row {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+	}
+	
+	.t-flex-row-s {
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-start;
+		align-items: center;
 	}
 </style>
