@@ -5,7 +5,6 @@ function sleep(ms){
 function between(value, min, max) {
 	return Math.max(Math.min(value, max), min);
 }
-
 /**
  * 将rpx或px转换为px单位
  * @param {String} vaule

@@ -15,20 +15,10 @@
 			<text class="tit">区域</text>
 			<input class="input" type="text"  v-model="addressData.pickerText" disabled="true"   placeholder-class="placeholder" />
 		</view>
-		<!-- <view class="list-cell b-b" hover-class="cell-hover" :hover-stay-time="50">
-			 
-			 <text class="cell-tit"  >注册区域</text>
-			 
-			 <input class="input" type="text" v-model="pickerText" @click="showMulLinkageThreePicker"  placeholder-class="placeholder" />
-		</view> -->
-		
 		<view class="row b-b">
 			<text class="tit">地址</text>
 			<input class="input" type="text" v-model="addressData.addressName" placeholder="详细地址" placeholder-class="placeholder" />
-			<!-- <text @click="chooseLocation" class="input">
-				{{addressData.addressName}}
-			</text>
-			<text class="yticon icon-shouhuodizhi"></text> -->
+			<text class="icon-shouhuodizhi" @click="chooseLocation">选择位置</text>
 		</view>
 		<view class="row b-b"> 
 			<text class="tit">门牌号</text>
@@ -45,8 +35,6 @@
 
 <script>
 	import mpvueCityPicker from '@/components/mpvue-citypicker/mpvueCityPicker.vue'
-/* 	import cityData from '@/components/city.data.js';
-	import cityData3 from '@/components/city.data-3.js'; */
 	
 	export default {
 		components: {
@@ -111,7 +99,6 @@
 				this.addressList=this.$dataLocal("address")||[];
 
 			},
-			
 			switchChange(e){
 				console.log(e.detail)
 				var li =this.addressList;
@@ -129,10 +116,11 @@
 			
 			//地图选择地址
 			chooseLocation(){
+				let that=this
 				uni.chooseLocation({
 					success: (data)=> {
-						this.addressData.addressName = data.name;
-						this.addressData.address = data.name;
+						that.addressData.addressName = data.address;
+						that.addressData.address = data.address;
 					}
 				})
 			},
@@ -173,8 +161,7 @@
 				}else{
 					data.id=li.length;
 					li.push(data);
-				}
-						 
+				}		 
 				this.$dataLocal("address",li);
 				setTimeout(()=>{
 					uni.navigateBack()

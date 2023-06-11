@@ -12,10 +12,10 @@
 					<text class="mobile">{{item.mobile}}</text>
 				</view>
 			</view>
-			<text class="" @click="editAddress(item)">编辑</text>
+			<text class="" @tap="editAddress(item)">编辑</text>
 		</view>
 		
-		<button class="add-btn" @click="addAddress()">新增地址</button>
+		<button class="add-btn" @tap="addAddress()">新增地址</button>
 	</view>
 </template>
 
@@ -40,10 +40,9 @@
 			},
 			editAddress(item){
 				uni.navigateTo({
-					url: `/pages/mine/add_address?id=`+item.id
+					url: '/pages/mine/exchange/add_address?id=${item.id}'
 				})
 			},
-			
 			//选择地址
 			checkAddress(item){
 				if(this.source == 1){
@@ -51,11 +50,8 @@
 					//this.$api.prePage().addressData = item;
 					this.setDefault(item)
 					uni.navigateBack()
-					
-					
 				}
 			},
-			
 			setDefault(item){
 				var li =this.addressList;
 				for(let i in li){
@@ -70,7 +66,6 @@
 				}
 				this.$dataLocal("address",li);
 			},
-			
 			addAddress(){
 				uni.navigateTo({
 					url: `/pages/mine/exchange/add_address`
@@ -78,14 +73,12 @@
 			},
 			//添加或修改成功之后回调
 			refreshList(data, type){
-				//添加或修改后事件，这里直接在最前面添加了一条数据，实际应用中直接刷新地址列表即可
 				this.addressList.unshift(data);	
 				console.log(data, type);
 			}
 		}
 	}
 </script>
-
 <style lang='scss'>
 	page{
 		padding-bottom: 120upx;

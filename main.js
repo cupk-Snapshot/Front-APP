@@ -11,13 +11,15 @@ Vue.prototype.$store = store
 App.mpType = 'app'
 
 
-import util from "./static/utils/util.js"
+import util from "./utils/util.js"
 Vue.prototype.$toast = util.toast;
 
-import cacheUtil from "./static/utils/cacheUtil.js"
+import cacheUtil from "./utils/cacheUtil.js"
 Vue.prototype.$dataLocal = cacheUtil.data_local;
 Vue.prototype.$dataSession = cacheUtil.data_session;
 
+import $mRouter from './utils/router';
+Vue.prototype.$mRouter = $mRouter;
 const app = new Vue({
   ...App
 })
