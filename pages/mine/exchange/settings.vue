@@ -12,6 +12,7 @@
 					<text class="mobile">{{item.mobile}}</text>
 				</view>
 			</view>
+			<uni-icons type="compose" size="16" @click="editAddress(item)"></uni-icons>
 			<text class="" @tap="editAddress(item)">编辑</text>
 		</view>
 		
@@ -39,9 +40,10 @@
 				this.addressList=this.$dataLocal("address");
 			},
 			editAddress(item){
+				let id=item.id
 				uni.navigateTo({
-					url: '/pages/mine/exchange/add_address?id=${item.id}'
-				})
+					url: '/pages/mine/exchange/add_address?id='+id
+					})
 			},
 			//选择地址
 			checkAddress(item){

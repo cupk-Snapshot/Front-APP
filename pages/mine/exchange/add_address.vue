@@ -42,7 +42,7 @@
 		},
 		data() {
 			return {
-			edit_city_picker:true,
+			editCityPicker:true,
 			cityPickerValueDefault: [0, 0, 1],
 			themeColor: '#007AFF',
 			
@@ -145,10 +145,6 @@
 				if(!data.addressName){
 					this.$toast('请在地图选择所在位置');
 					return;
-				}
-				if(!data.area){
-					//this.$toast('请填写门牌号信息');
-					//return;
 				}
 				
 				if(typeof data.id!="undefined"){
