@@ -11,6 +11,11 @@
 	  "enablePullDownRefresh":true
     }
   },{
+	"path": "pages/comment/comments",
+	"style": {
+	  "navigationBarTitleText": "评论"
+	}
+  },{
     "path": "pages/create/index",
     "style": {
       "navigationBarTitleText": "随手拍"
