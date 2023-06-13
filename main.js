@@ -18,6 +18,25 @@ import cacheUtil from "./utils/cacheUtil.js"
 Vue.prototype.$dataLocal = cacheUtil.data_local;
 Vue.prototype.$dataSession = cacheUtil.data_session;
 
+const prePage = ()=>{
+	let pages = getCurrentPages();
+	let prePage = pages[pages.length - 2];
+	// #ifdef H5
+	return prePage;
+	// #endif
+	return prePage.$vm;
+}
+const json = type=>{
+	//模拟异步请求数据
+	return new Promise(resolve=>{
+		setTimeout(()=>{
+			resolve(Json[type]);
+		}, 500)
+	})
+}
+// 可能要加msg
+Vue.prototype.$api = {json, prePage};
+
 import $mRouter from './utils/router';
 Vue.prototype.$mRouter = $mRouter;
 const app = new Vue({

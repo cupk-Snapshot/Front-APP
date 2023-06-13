@@ -25,7 +25,34 @@
 					<text>{{item.goodsScore}}</text>
 					<text>积分</text>
 				</view>
-				<view class="t-dh t-flex-row" bindtap="toTips" hover-class="t-click-class">我要兑换</view>
+				<view class="t-dh t-flex-row" @click="setChoose(item.id)"><tui-button shape="circle" shadow @click="bDrawer">我要兑换</tui-button></view>
+					<tui-drawer mode="bottom" :visible="bottomDrawer" @close="closeDrawer">
+						<view class="tui-drawer__box">
+							<navigator url="/pages/mine/exchange/address_setting?source=1" class="address-section">
+								<text>选择地址</text>
+								<view class="order-content">
+									<uni-icons type="location" size="30"></uni-icons>
+									<view class="cen">
+										<view class="top">
+											<text class="name">{{addressData.name}}</text>
+											<text class="mobile">{{addressData.mobile}}</text>
+										</view>
+										<text class="address">{{addressData.address}} {{addressData.addressName}}</text>
+									</view>
+									<uni-icons type="right" size="30"></uni-icons>
+								</view>
+							</navigator>
+							<text>详情信息</text>
+							<view class="good-content" v-for="item in goodsList" v-if="item.isChoose">
+								<image :src="item.goodsUrl"></image>
+								<view>
+									<text class="good-name">{{item.goodsDesc}}</text>
+								    <text class="good-score">{{item.goodsScore}}积分<text class="good-stock">商品库存：{{item.stocks}}</text></text>
+								</view>
+							</view>
+							<button class="btn-submit" @click="sureToBuy">确定</button>
+						</view>
+					</tui-drawer>
 			</view>
 		</view>
 		<view class="t-more t-flex-row">
@@ -35,87 +62,128 @@
 </template>
 
 <script>
+	import tuiDrawer from "@/components/tui-drawer/tui-drawer.vue"
+	import tuiButton from "@/components/tui-button/tui-button.vue"
+	import tuiBottomPopup from "@/components/tui-bottom-popup/tui-bottom-popup.vue" 
 	export default {
+		components:{
+			tuiDrawer,
+			tuiButton,
+			tuiBottomPopup
+		},
 		data() {
 			return {
+				bottomPopup: false,
+				bottomDrawer: false,
 				goodsList: [{
+						id:0,
 						goodsUrl: '/static/images/goods/1.png',
 						goodsDesc: '多功能晴雨伞一把',
-						goodsScore: 1000
+						goodsScore: 1000,
+						stocks:99,
+						isChoose:false
 					},
 					{
+						id:1,
 						goodsUrl: '/static/images/goods/2.png',
 						goodsDesc: '万用充电线一条',
-						goodsScore: 3000
+						goodsScore: 3000,
+						stocks:99,
+						isChoose:false
 					},
 					{
+						id:2,
 						goodsUrl: '/static/images/goods/3.png',
 						goodsDesc: '保温壶一个',
-						goodsScore: 5000
+						goodsScore: 5000,
+						stocks:99,
+						isChoose:false
 					},
 					{
+						id:3,
 						goodsUrl: '/static/images/goods/4.png',
 						goodsDesc: '400ML水杯一个',
-						goodsScore: 2000
+						goodsScore: 2000,
+						stocks:99,
+						isChoose:false
 					},
 					{
+						id:4,
 						goodsUrl: '/static/images/goods/5.png',
 						goodsDesc: '万用切刀一把',
-						goodsScore: 6000
+						goodsScore: 6000,
+						stocks:99,
+						isChoose:false
 					},
 					{
+						id:5,
 						goodsUrl: '/static/images/goods/6.png',
 						goodsDesc: '小巧手电筒一个',
-						goodsScore: 1000
+						goodsScore: 1000,
+						stocks:99,
+						isChoose:false
 					},
 					{
+						id:6,
 						goodsUrl: '/static/images/goods/7.png',
 						goodsDesc: '800ML杯子一个',
-						goodsScore: 7000
+						goodsScore: 7000,
+						stocks:99,
+						isChoose:false
 					},
 					{
+						id:7,
 						goodsUrl: '/static/images/goods/8.png',
 						goodsDesc: '600ML保温杯一个',
-						goodsScore: 12000
+						goodsScore: 9000,
+						stocks:99,
+						isChoose:false
 					},
-				]
+				],
+				addressData:{
+					name: 'zdy',
+					mobile: '13853984358',
+					addressName: '前锋小区',
+					address: '四川省-成都市-历城区',
+					area: '149号',
+					default: true,
+				},
 			}
 		},
 		onLoad() {
 		},
 		onNavigationBarButtonTap(e) {
 				uni.navigateTo({
-					url: `/pages/mine/exchange/settings`
+					url: `/pages/mine/exchange/address_setting`
 				})
 			},
 		methods: {
-			
-			//签到点击
-			toSign() {
-				if (!this.isSigned) {
-					//这里写签到逻辑，这里模拟成功后操作
-					this.showSignBox = true;
-				}
-			},
-			//关闭签到弹框--签到成功后点击
-			closeSign() {
-				this.showSignBox = false;
-				this.isSigned = true;
-			},
-			//打开签到弹框
-			openRule() {
-				this.showRuleBox = true;
-			},
-			//关闭签到弹框
-			closeRule() {
-				this.showRuleBox = false;
-			},
 			//跳转积分明细
 			toDetail() {
 				uni.navigateTo({
 					url: '/pages/mine/exchange/detail'
 				})
-			}
+			},
+			bDrawer() {
+				this.bottomDrawer = true;
+			},
+			closeDrawer(e) {
+				this.bottomDrawer = false;
+			},
+			setChoose(Id){
+				var li =this.goodsList;
+				for(let i in li){
+					let ite=li[i];
+					ite.isChoose=false;
+				}
+				for(let j in li){
+					let itee=li[j];
+					if(itee.id===Id){
+						itee.isChoose=true;
+					}
+				}
+				this.goodsList=li
+			},
 		}
 	}
 </script>
@@ -128,7 +196,74 @@
 		min-width: 100vw;
 		min-height: 100vh;
 	}
-
+	
+	.tui-drawer__box {
+		height: 500rpx;
+		padding: 20rpx;
+		box-sizing: border-box;
+		
+		.address-section {
+			padding:0;
+			background: #ffffff;
+			position: relative;
+		
+			.order-content {
+				display: flex;
+				align-items: center;
+				margin-top: 10upx;
+			}
+			.cen {
+				display: flex;
+				flex-direction: column;
+				flex: 1;
+				font-size: 28upx;
+				color: $font-color-dark;
+			}
+			.name {
+				font-size: 34upx;
+				margin-right: 24upx;
+			}
+			.address {
+				margin-top: 16upx;
+				margin-right: 20upx;
+				color: $font-color-light;
+			}
+		}
+		.good-content{
+			display: flex;
+			height:200rpx;
+			position: relative;
+			margin-top: 16upx;
+			image{
+				float:left;
+				width: 200rpx;
+				height: 200rpx;
+				margin-left: 6rpx;
+			}
+			.good-score{
+				display: flex;
+				margin-top:100rpx;
+				color: $font-color-light;
+				.good-stock{
+					margin-left:200rpx;
+				}
+			}
+		}
+		.btn-submit{
+			display: flex;
+			float:right;
+			flex-direction: row;
+			justify-content: center;
+			align-items: center;
+			width: 310rpx;
+			height: 70rpx;
+			background: #17ba7a;
+			border-radius: 35rpx;
+			font-size: 32rpx;
+			color: #FFFFFF;
+		}
+	}
+	
 	.t-hc {
 		opacity: 0.7;
 	}
