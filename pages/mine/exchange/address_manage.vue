@@ -32,6 +32,7 @@
 
 <script>
 	import mpvueCityPicker from '@/components/mpvue-citypicker/mpvueCityPicker.vue'
+	import { getUserProfile } from '@/api/system/user'
 	
 	export default {
 		components: {
@@ -42,58 +43,77 @@
 			editCityPicker:true,
 			cityPickerValueDefault: [0, 0, 1],
 			themeColor: '#007AFF',
-			
-				addressData: {
-					name: '',
-					mobile: '',
-					addressName: '',
-					address: '',
-					default: false
+			addressData: {
+				name: '',
+				mobile: '',
+				addressName: '',
+				address: '',
+				default: false
 				},
-				addressList:[],
+			addressList:[],
+			user:{}
 			}
 		},
+		//页面加载函数
 		onLoad(option){
-			this.loadAddress();
+			this.getUser();
+			// this.loadAddress();
 			let title = '新增收货地址';
-			if(option.type==='edit'){
-				
-			}
-
+			let that=this;
+			// if(option.type==='edit'){}
 			if(!!option.id){
 				title = '编辑收货地址';
-				this.locateAddress(option.id)
-				
+				uni.request({
+					url:"",
+					method:"POST",
+					header:{
+						token:this.token
+					},
+					data:{
+						addressId:option.id,
+						userId:that.user.uuid
+					},
+					success:(res)=>{
+						console.log(res.data);
+						that.addressData=res.data;
+					}
+				// this.locateAddress(option.id)
+				})
 			}
 			uni.setNavigationBarTitle({ 
 				title
 			})
 		},
 		methods: {
+			getUser() {
+			  getUserProfile().then(response => {
+			    this.user = response.data
+			  })
+			},
 		onConfirm(e) {
 				console.log(e);
 				 this.addressData.address=e.label;
-				 console.log( this.addressData)
+				 console.log(this.addressData)
 			},
-			
 			showMulLinkageThreePicker() {		
 			    this.$refs.mpvueCityPicker.show()
 			},
-			locateAddress(_id){
-				var li=this.addressList;
-				for(var i in li){
-					var ite=li[i];
-					if(parseFloat(ite.id)===parseFloat(_id)){
-						this.addressData=ite;
-					}
-				}
-				console.log(this.addressData)
-			},
-			loadAddress(){
-				let _this=this;
-				this.addressList=this.$dataLocal("address")||[];
-
-			},
+			// locateAddress(_id){
+			// 	var li=this.addressList;
+			// 	for(var i in li){
+			// 		var ite=li[i];
+			// 		if(parseFloat(ite.id)===parseFloat(_id)){
+			// 			this.addressData=ite;
+			// 		}
+			// 	}
+			// 	console.log(this.addressData)
+			// },
+			// loadAddress(){
+			// 	let _this=this;
+			// 	this.addressList=this.$dataLocal("address")||[];
+			// },
+			
+			//选择默认开关
 			switchChange(e){
 				console.log(e.detail)
 				var li =this.addressList;
@@ -108,21 +128,18 @@
 				console.log(li);
 				this.addressData.default = e.detail.value;
 			},
-			
 			//地图选择地址
 			chooseLocation(){
 				let that=this
 				uni.chooseLocation({
 					success: (data)=> {
-						// that.addressData.addressName = data.address;
 						that.addressData.address = data.address;
 					}
 				})
 			},
-			
 			//提交
 			confirm(){
-				let li=this.addressList;
+				//let li=this.addressList;
 				let data = this.addressData;
 				if(!data.name){
 					this.$toast('请填写收货人姓名');
@@ -141,19 +158,37 @@
 					this.$toast('请在地图选择所在位置');
 					return;
 				}
-				
-				if(typeof data.id!="undefined"){
-					for(let i in li){
-						var ite=li[i];
-						if(parseFloat(ite.id)===parseFloat(data.id)){
-							ite=data;
-						}
+				// if(typeof data.id!="undefined"){
+				// 	for(let i in li){
+				// 		var ite=li[i];
+				// 		if(parseFloat(ite.id)===parseFloat(data.id)){
+				// 			ite=data;
+				// 		}
+				// 	}
+				// }else{
+				// 	data.id=li.length;
+				// 	li.push(data);
+				// }		 
+				// this.$dataLocal("address",li);
+				let that=this
+				uni.request({
+					url:"",
+					method:"POST",
+					header:{
+						token:that.token
+					},
+					data:{
+						userId:that.user.uuid,
+						name:data.name,
+						mobile:data.mobile,
+						address:data.address,
+						addressName:data.addressName,
+						default:data.default
+					},
+					success:(res)=>{
+						console.log(res);
 					}
-				}else{
-					data.id=li.length;
-					li.push(data);
-				}		 
-				this.$dataLocal("address",li);
+				})
 				setTimeout(()=>{
 					uni.navigateBack()
 				}, 800)

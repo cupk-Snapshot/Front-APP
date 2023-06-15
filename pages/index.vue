@@ -25,7 +25,7 @@ export default {
 			startNum: 0,
 			cardList: [
 				{
-					id: 1,
+					id: 0,
 					createTime: '2022-11-11',
 					avatarUrl: 'https://6d61-matchbox-79a395-1302390714.tcb.qcloud.la/matchbox/avatar.png',
 					nickName: '用户名',
@@ -38,7 +38,7 @@ export default {
 						"url": "https://6d61-matchbox-79a395-1302390714.tcb.qcloud.la/matchbox/tree.jpg"
 					}]
 				}, {
-					id: 2,
+					id: 1,
 					"createTime": "3天前",
 					"avatarUrl": "https://6d61-matchbox-79a395-1302390714.tcb.qcloud.la/matchbox/avatar.png",
 					"nickName": "小黄鸭",
@@ -53,7 +53,7 @@ export default {
 						url: 'https://6d61-matchbox-79a395-1302390714.tcb.qcloud.la/matchbox/lonely.jpg'
 					}]
 				}, {
-					id: 3,
+					id: 2,
 					"createTime": "7-10",
 					"avatarUrl": "https://6d61-matchbox-79a395-1302390714.tcb.qcloud.la/matchbox/avatar.png",
 					"nickName": "小黄鸭",

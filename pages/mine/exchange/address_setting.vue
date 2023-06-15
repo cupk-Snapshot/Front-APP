@@ -5,7 +5,7 @@
 			<view class="wrapper">
 				<view class="address-box">
 					<text v-if="item.default" class="tag">默认</text>
-					<text class="address">{{item.pickerText}}{{item.addressName}} {{item.area}}</text>
+					<text class="address">{{item.address}} {{item.addressName}} {{item.area}}</text>
 				</view>
 				<view class="u-box">
 					<text class="name">{{item.name}}</text>
@@ -23,71 +23,104 @@
 </template>
 
 <script>
+	import { getUserProfile } from '@/api/system/user'
 	export default {
 		data() {
 			return {
 				source: 0,
-				addressList: [{
-					name: 'zdy',
-					mobile: '13853984358',
-					addressName: '前锋小区',
-					address: '四川省-成都市-历城区',
-					area: '149号',
-					default: true,
-				},
-				{
-					name: 'zyg',
-					mobile: '13853989563',
-					addressName: '金九大道',
-					address: '山东省-济南市-历城区',
-					area: '114514号',
-					default: false,
-				}
-				]
+				addressList: [
+					// {
+				// 	name: 'zdy',
+				// 	mobile: '13853984358',
+				// 	addressName: '前锋小区',
+				// 	address: '四川省-成都市-历城区',
+				// 	area: '149号',
+				// 	default: true,
+				// },
+				// {
+				// 	name: 'zyg',
+				// 	mobile: '13853989563',
+				// 	addressName: '金九大道',
+				// 	address: '山东省-济南市-历城区',
+				// 	area: '114514号',
+				// 	default: false,
+				// }
+				],
+				user:{}
 			}
 		},
 		onLoad(option){
 			console.log(option.source);
 			this.source = option.source;
+			this.getUser();
+			this.loadAddress();
 		},
 		onShow(){
 			this.loadAddress();
 		},
 		methods: {
+			getUser() {
+				let that=this;
+			  getUserProfile().then(response => {
+			    that.user = response.data
+			  })
+			},
 			loadAddress(){
 				// this.addressList=this.$dataLocal("address");
-				this.addressList=this.addressList
+				// this.addressList=this.addressList
+				let that=this;
+				uni.request({
+					url:"",
+					data:{
+						userId:that.user.uuid
+					},
+					methods:"GET",
+					success:(res)=>{
+						console.log(res.data);
+						that.addressList=res.data
+					}
+				})
 			},
 			editAddress(item){
 				let id=item.id
 				uni.navigateTo({
 					url: '/pages/mine/exchange/address_manage?id='+id
-					})
+				})
 			},
 			//删除地址
-			handleRemove(addressId) {
+			handleRemove(addressId){
 				const that = this
 				uni.showModal({
 					title: "提示",
 					content: "您确定要删除当前收货地址吗?",
 					success: function (res) {
-			    		if (res.confirm) {
-							var list =that.addressList;
-							const item = list.filter(address => address.id !== addressId);
-							// that.$dataLocal("address",item);
-							that.addressList=item;
-							uni.showToast({
-								title: '删除成功',
-								duration: 2000
-							});
+			    		if (res.confirm){
+							uni.request({
+									url: "",
+									head:{
+										token:that.token
+									},
+									data:{
+										addressId:addressId,
+										userId:that.user.uuid
+									},
+									success: (resp) => {
+										if(resp.data.code == 200){//删除成功
+										that.addressList=resp.data.
+										uni.showToast({
+											title: '删除成功',
+											duration: 2000
+										});
+								        }
+									},
+							})
 							that.loadAddress()
-			    		}
+						}
 						else if (res.cancel) {
 			    			console.log('用户点击取消');
 			    		}	
 			    	}
-			  });
-					
+			  });	
 			},
 			//选择地址
 			checkAddress(item){
@@ -157,6 +190,9 @@
 			border-radius: 4upx;
 			padding: 4upx 10upx;
 			line-height: 1;
+			display: inline-block;
+			height:35rpx;
+			width:66rpx;
 		}
 		.address{
 			font-size: 30upx;

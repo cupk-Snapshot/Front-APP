@@ -25,7 +25,7 @@
 					<text>{{item.goodsScore}}</text>
 					<text>积分</text>
 				</view>
-				<view class="t-dh t-flex-row" @click="setChoose(item.id)"><tui-button shape="circle" shadow @click="bDrawer">我要兑换</tui-button></view>
+				<view class="t-dh t-flex-row" @click="saveChoose(item.id)"><tui-button shape="circle" shadow @click="bDrawer">我要兑换</tui-button></view>
 					<tui-drawer mode="bottom" :visible="bottomDrawer" @close="closeDrawer">
 						<view class="tui-drawer__box">
 							<navigator url="/pages/mine/exchange/address_setting?source=1" class="address-section">
@@ -43,11 +43,11 @@
 								</view>
 							</navigator>
 							<text>详情信息</text>
-							<view class="good-content" v-for="item in goodsList" v-if="item.isChoose">
-								<image :src="item.goodsUrl"></image>
+							<view class="good-content">
+								<image :src="goodinfo.goodsUrl"></image>
 								<view>
-									<text class="good-name">{{item.goodsDesc}}</text>
-								    <text class="good-score">{{item.goodsScore}}积分<text class="good-stock">商品库存：{{item.stocks}}</text></text>
+									<text class="good-name">{{goodinfo.goodsDesc}}</text>
+								    <text class="good-score">{{goodinfo.goodsScore}}积分<text class="good-stock">商品库存：{{goodinfo.stocks}}</text></text>
 								</view>
 							</view>
 							<button class="btn-submit" @click="sureToBuy">确定</button>
@@ -65,6 +65,7 @@
 	import tuiDrawer from "@/components/tui-drawer/tui-drawer.vue"
 	import tuiButton from "@/components/tui-button/tui-button.vue"
 	import tuiBottomPopup from "@/components/tui-bottom-popup/tui-bottom-popup.vue" 
+	import { getUserProfile } from "@/api/system/user"
 	export default {
 		components:{
 			tuiDrawer,
@@ -81,7 +82,6 @@
 						goodsDesc: '多功能晴雨伞一把',
 						goodsScore: 1000,
 						stocks:99,
-						isChoose:false
 					},
 					{
 						id:1,
@@ -89,7 +89,6 @@
 						goodsDesc: '万用充电线一条',
 						goodsScore: 3000,
 						stocks:99,
-						isChoose:false
 					},
 					{
 						id:2,
@@ -97,7 +96,6 @@
 						goodsDesc: '保温壶一个',
 						goodsScore: 5000,
 						stocks:99,
-						isChoose:false
 					},
 					{
 						id:3,
@@ -105,7 +103,6 @@
 						goodsDesc: '400ML水杯一个',
 						goodsScore: 2000,
 						stocks:99,
-						isChoose:false
 					},
 					{
 						id:4,
@@ -113,7 +110,6 @@
 						goodsDesc: '万用切刀一把',
 						goodsScore: 6000,
 						stocks:99,
-						isChoose:false
 					},
 					{
 						id:5,
@@ -121,7 +117,6 @@
 						goodsDesc: '小巧手电筒一个',
 						goodsScore: 1000,
 						stocks:99,
-						isChoose:false
 					},
 					{
 						id:6,
@@ -129,7 +124,6 @@
 						goodsDesc: '800ML杯子一个',
 						goodsScore: 7000,
 						stocks:99,
-						isChoose:false
 					},
 					{
 						id:7,
@@ -137,7 +131,6 @@
 						goodsDesc: '600ML保温杯一个',
 						goodsScore: 9000,
 						stocks:99,
-						isChoose:false
 					},
 				],
 				addressData:{
@@ -148,9 +141,13 @@
 					area: '149号',
 					default: true,
 				},
+				goodinfo:{},
+				orderData:{},
+				user:{}
 			}
 		},
 		onLoad() {
+			this.getUser()
 		},
 		onNavigationBarButtonTap(e) {
 				uni.navigateTo({
@@ -158,10 +155,20 @@
 				})
 			},
 		methods: {
+			getUser() {
+			  getUserProfile().then(response => {
+			    this.user = response.data
+			  })
+			},
 			//跳转积分明细
 			toDetail() {
 				uni.navigateTo({
 					url: '/pages/mine/exchange/detail'
+				})
+			},
+			toHistory() {
+				uni.navigateTo({
+					url: '/pages/mine/exchange/history'
 				})
 			},
 			bDrawer() {
@@ -170,20 +177,22 @@
 			closeDrawer(e) {
 				this.bottomDrawer = false;
 			},
-			setChoose(Id){
+			saveChoose(Id){
 				var li =this.goodsList;
-				for(let i in li){
-					let ite=li[i];
-					ite.isChoose=false;
-				}
 				for(let j in li){
 					let itee=li[j];
 					if(itee.id===Id){
-						itee.isChoose=true;
+						this.goodinfo=itee;
 					}
 				}
-				this.goodsList=li
 			},
+			sureToBuy(){
+				this.orderData={
+					
+				};
+				console.log(orderData);
+				this.$modal.showToast('兑换成功');
+			}
 		}
 	}
 </script>

@@ -45,11 +45,19 @@
 						score: 100,
 						createAt: '2022-09-09'
 					},
-				]
+				],
+				user:{}
 			}
 		},
+		onLoad(){
+			this.getUser()
+		},
 		methods: {
-
+            getUser(){
+              getUserProfile().then(response => {
+                this.user = response.data
+              })
+            },
 		}
 	}
 </script>
@@ -61,7 +69,6 @@
 		justify-content: center;
 		align-items: center;
 	}
-
 	.t-more {
 		font-size: 28rpx;
 		color: #888888;
@@ -69,21 +76,18 @@
 		margin-top: 50rpx;
 		margin-bottom: 85rpx;
 	}
-
 	.t-flex-row-sb {
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
 		align-items: center;
 	}
-
 	.t-flex-col-s {
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-start;
 		align-items: center;
 	}
-
 	.content {
 		background: #F6F3F3;
 		min-width: 100vw;

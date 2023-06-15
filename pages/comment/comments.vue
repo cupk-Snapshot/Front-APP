@@ -85,7 +85,10 @@
 			};
 		},
 		onLoad(options) {
-			that = this
+			uni.request({
+				url:""
+			});
+			that = this;
 			if (options && options.id) {
 				that.detailId = options.id
 				let list = that.$store.state.diary.cardList

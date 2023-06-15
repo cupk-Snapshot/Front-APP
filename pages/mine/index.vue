@@ -14,7 +14,7 @@
           </view>
           <view v-if="name" @click="handleToInfo" class="user-info">
             <view class="u_title">
-              用户名：{{ name }}
+              用户名：{{ user.userName }}
             </view>
           </view>
         </view>
@@ -78,12 +78,14 @@
 
 <script>
   import storage from '@/utils/storage'
+  import { getUserProfile } from '@/api/system/user'
   
   export default {
     data() {
-      return {
+      return { 
         name: this.$store.state.user.name,
-        version: getApp().globalData.config.appInfo.version
+        version: getApp().globalData.config.appInfo.version,
+		user:{}
       }
     },
     computed: {
@@ -94,7 +96,16 @@
         return uni.getSystemInfoSync().windowHeight - 50
       }
     },
+	onLoad(option){
+		this.getUser();
+	},
     methods: {
+		getUser() {
+			let that=this;
+		  getUserProfile().then(response => {
+		    that.user = response.data
+		  })
+		},
       handleToInfo() {
         this.$tab.navigateTo('/pages/mine/info/index')
       },

@@ -7,19 +7,15 @@
     </view>
     <view class="login-form-content">
       <view class="input-item flex align-center">
-        <view class="iconfont icon-user icon"></view>
-        <input v-model="loginForm.username" class="input" type="text" placeholder="请输入账号" maxlength="30" />
+        <uni-icons class="icon" type="phone" size="16"></uni-icons>
+        <input v-model="loginForm.mobile" class="input" type="text" placeholder="请输入手机号 " maxlength="30" />
       </view>
-      <view class="input-item flex align-center">
-        <view class="iconfont icon-password icon"></view>
-        <input v-model="loginForm.password" type="password" class="input" placeholder="请输入密码" maxlength="20" />
-      </view>
-      <view class="input-item flex align-center" style="width: 60%;margin: 0px;" v-if="captchaEnabled">
+      <view class="input-item flex align-center" style="width: 60%;margin: 0px;">
         <view class="iconfont icon-code icon"></view>
         <input v-model="loginForm.code" type="number" class="input" placeholder="请输入验证码" maxlength="4" />
         <view class="login-code"> 
-          <image :src="codeUrl" @click="getCode" class="login-code-img"></image>
-        </view  >
+      		  <text class="code-text":class="{ gray: showTime }" @click="handleGetCodeClick">{{showTime ?currentCountTime+'再次获取验证码':'获取验证码'}}</text>
+        </view>
       </view>
       <view class="action-btn">
         <button @click="handleLogin" class="login-btn cu-btn block bg-blue lg round">登录</button>
@@ -32,7 +28,7 @@
       <text @click="handlePrivacy" class="text-blue">《隐私协议》</text>
     </view>
 	<view class="register1 text-center">
-		<text @click="tologinByMobile" class="text-blue">手机号登录</text>
+		<text @click="toLogin" class="text-blue">账号密码登录</text>
 	</view>
 	<view class="register text-center">
 		<text @click="toRegister" class="text-blue">还没有账号，先去注册</text>
@@ -41,51 +37,77 @@
 </template>
 
 <script>
-  import { getCodeImg } from '@/api/login'
-
   export default {
     data() {
       return {
         codeUrl: "",
-        captchaEnabled: true,
         globalConfig: getApp().globalData.config,
         loginForm: {
-          username: "admin",
-          password: "admin123",
+          mobile:"",
           code: "",
-          uuid: ''
-        }
+        },
+		countTime: 60,
+		currentCountTime: 0,
+		showTime:false,
+		timeId:null
       }
     },
-    created() {
-      this.getCode()
-    },
+	mounted() {
+		this.currentCountTime = this.countTime
+	},
     methods: {
-      // 获取图形验证码
-      getCode() {
-        getCodeImg().then(res => {
-          this.captchaEnabled = res.captchaEnabled === undefined ? true : res.captchaEnabled
-          if (this.captchaEnabled) {
-            this.codeUrl = 'data:image/gif;base64,' + res.img
-            this.loginForm.uuid = res.uuid
-          }
-        })
-      },
       // 登录方法
       async handleLogin() {
-        if (this.loginForm.username === "") {
-          this.$modal.msgError("请输入您的账号")
-        } else if (this.loginForm.password === "") {
-          this.$modal.msgError("请输入您的密码")
-        } else if (this.loginForm.code === "" && this.captchaEnabled) {
+        if (this.loginForm.mobile === "") {
+          this.$modal.msgError("请输入您的手机号")
+        } else if (this.loginForm.code === ""){
           this.$modal.msgError("请输入验证码")
         } else {
           this.$modal.loading("登录中，请耐心等待...")
-          this.pwdLogin()
+          this.mobLogin()
         }
       },
-      // 密码登录
-      async pwdLogin() {
+	  handleGetCodeClick(){
+	  	if (this.loginForm.mobile === "") {
+	  		this.$toast('请输入您的手机号');
+	  		return
+	  	}
+	  	else if(!/(^1[3|4|5|7|8|9][0-9]{9}$)/.test(this.loginForm.mobile)){
+	  		this.$toast('请输入正确的手机号码');
+	  		return;
+	  	}
+	    	this.showTime = true
+	    	if(this.showTime && this.currentCountTime !== this.countTime) return
+	    	this.currentCountTime
+	  	uni.request({
+	  		url:"",
+	  		method:"POST",
+	  		data:{
+	  			mobile:this.mobile,
+	  			type:'注册发送验证码'
+	  		},
+	  		success: () => {
+	  			uni.showToast({
+	  			  title: '验证码已发送',
+	  			  icon: 'success',
+	  			  duration: 2000
+	  			})
+	  			this.timeId = setInterval(()=>{
+	  				this.currentCountTime--
+	  				if(this.currentCountTime <= 0) {
+	  					this.currentCountTime = this.countTime
+	  					this.showTime = false
+	  					clearInterval(this.timeId)
+	  				}
+	  			},1000)
+	  		},
+	  		fail: () => {
+	  			this.$modal.msgError("发送失败，请稍后再试")
+	  		}
+	  	})
+	  },
+      //手机号登录
+      async mobLogin() {
         this.$store.dispatch('Login', this.loginForm).then(() => {
           this.$modal.closeLoading()
           this.loginSuccess()
@@ -105,8 +127,8 @@
 	  toRegister(){
 	  		 this.$tab.navigateTo('/pages/register') 
 	  },
-	  tologinByMobile(){
-	  		 this.$tab.navigateTo('/pages/loginByMobile') 
+	  toLogin(){
+	  		 this.$tab.navigateTo('/pages/login') 
 	  }
     }
   }
@@ -116,11 +138,11 @@
   page {
     background-color: #ffffff;
   }
-  .register{
+  .register1{
   		color: #333;
   		margin-top: 40px;
   }
-  .register1{
+  .register{
   		color: #333;
   		margin-top: 40px;
   }
@@ -179,18 +201,19 @@
         color: #333;
         margin-top: 20px;
       }
-      
-	  
       .login-code {
         height: 38px;
-        float: right;
-      
-        .login-code-img {
-          height: 38px;
-          position: absolute;
-          margin-left: 10px;
-          width: 200rpx;
-        }
+      		.code-text {
+      			font-size: 14px;
+      			color: #30C6B3;
+      			position: absolute;
+      			margin-left: 10px;
+      			width: 200rpx;
+      			height: 38px;
+      			text-align: left;
+      			padding-left: 15px;
+      			margin-top:10px;
+      		}
       }
     }
   }
