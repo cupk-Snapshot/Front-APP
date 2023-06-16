@@ -57,9 +57,9 @@
         }
       }
     },
-    created() {
-      this.getCode()
-    },
+    // created() {
+    //   this.getCode()
+    // },
     methods: {
       // 获取图形验证码
       getCode() {
@@ -77,11 +77,27 @@
           this.$modal.msgError("请输入您的账号")
         } else if (this.loginForm.password === "") {
           this.$modal.msgError("请输入您的密码")
-        } else if (this.loginForm.code === "" && this.captchaEnabled) {
-          this.$modal.msgError("请输入验证码")
-        } else {
+        } 
+		// else if (this.loginForm.code === "" && this.captchaEnabled) {
+  //         this.$modal.msgError("请输入验证码")
+  //       } 
+		else {
           this.$modal.loading("登录中，请耐心等待...")
           this.pwdLogin()
+		  // uni.request({
+			 //  url:'/api'+'/oauth/token',
+			 //  method:"POST",
+			 //  data:{
+				//   username:this.loginForm.username,
+				//   password:this.loginForm.password,
+				//   grant_type:"password",
+				//   client_id:"snapshot",
+				//   client_secret:"snapshot-secret"
+			 //  },
+			 //  success: (res) => {
+			 //  	console.log(res)
+			 //  }
+		  // })
         }
       },
       // 密码登录
@@ -89,11 +105,12 @@
         this.$store.dispatch('Login', this.loginForm).then(() => {
           this.$modal.closeLoading()
           this.loginSuccess()
-        }).catch(() => {
-          if (this.captchaEnabled) {
-            this.getCode()
-          }
         })
+		// .catch(() => {
+  //         if (this.captchaEnabled) {
+  //           this.getCode()
+  //         }
+  //       })
       },
       // 登录成功后，处理函数
       loginSuccess(result) {

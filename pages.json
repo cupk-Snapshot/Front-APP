@@ -103,6 +103,15 @@
             
         }
         ,{
+            "path" : "pages/mine/exchange/history",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "兑换历史",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
             "path" : "pages/register",
             "style" :                                                                                    
             {

@@ -5,11 +5,12 @@ export function login(username, password, code, uuid) {
   const data = {
     username,
     password,
-    code,
-    uuid
+	grant_type:"password",
+	client_id:"snapshot",
+	client_secret:"snapshot-secret"
   }
   return request({
-    'url': '/login',
+    'url': '/oauth/token',
     headers: {
       isToken: false
     },
@@ -21,7 +22,7 @@ export function login(username, password, code, uuid) {
 // 获取用户详细信息
 export function getInfo() {
   return request({
-    'url': '/getInfo',
+    'url': '/user/info/2',
     'method': 'get'
   })
 }

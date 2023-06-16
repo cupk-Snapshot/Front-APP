@@ -72,13 +72,20 @@
     "h5" : {
         "template" : "static/index.html",
         "devServer" : {
-            "port" : 9090,
-            "https" : false
-        },
+			"proxy" : {
+			    "/api" : {
+			        "target" : "http://82.156.156.143:9955", //请求的目标域名
+			        "changeOrigin" : true,
+			        "secure" : false
+			                }
+            // "port" : 9090,
+            // "https" : false
+			}
+		}, 
         "title" : "随手拍",
         "router" : {
             "mode" : "hash",
-            "base" : "./"
+            "base" : "/h5/"
         },
         "sdkConfigs" : {
             "maps" : {
