@@ -5,7 +5,7 @@
 			<view class="wrapper">
 				<view class="address-box">
 					<text v-if="item.default" class="tag">默认</text>
-					<text class="address">{{item.address}} {{item.addressName}} {{item.area}}</text>
+					<text class="address">{{item.area}} {{item.address}}</text>
 				</view>
 				<view class="u-box">
 					<text class="name">{{item.name}}</text>
@@ -14,7 +14,7 @@
 			</view>
 			<uni-icons type="compose" size="16" @click="editAddress(item)"></uni-icons>
 			<text class="" @tap="editAddress(item)">编辑</text>
-			<uni-icons type="trash-filled" size="16" @click="handleRemove(item.id)"></uni-icons>
+			<uni-icons type="trash-filled" size="16" @click="handleRemove(item.addressId)"></uni-icons>
 			<text class="" @tap="handleRemove(item.id)">删除</text>
 		</view>
 		
@@ -28,61 +28,42 @@
 		data() {
 			return {
 				source: 0,
-				addressList: [
-					// {
-				// 	name: 'zdy',
-				// 	mobile: '13853984358',
-				// 	addressName: '前锋小区',
-				// 	address: '四川省-成都市-历城区',
-				// 	area: '149号',
-				// 	default: true,
-				// },
-				// {
-				// 	name: 'zyg',
-				// 	mobile: '13853989563',
-				// 	addressName: '金九大道',
-				// 	address: '山东省-济南市-历城区',
-				// 	area: '114514号',
-				// 	default: false,
-				// }
-				],
-				user:{}
+				addressList:[],
+				user:{},
+				token:''
 			}
 		},
 		onLoad(option){
-			console.log(option.source);
 			this.source = option.source;
-			this.getUser();
+			this.user=uni.getStorageSync('user');
+			this.token=uni.getStorageSync('SET_TOKEN');
+			console.log(this.token)
 			this.loadAddress();
 		},
 		onShow(){
 			this.loadAddress();
 		},
 		methods: {
-			getUser() {
-				let that=this;
-			  getUserProfile().then(response => {
-			    that.user = response.data
-			  })
-			},
 			loadAddress(){
-				// this.addressList=this.$dataLocal("address");
-				// this.addressList=this.addressList
 				let that=this;
 				uni.request({
-					url:"",
+					url:"http://localhost:9955/user/address/all/3",
 					data:{
-						userId:that.user.uuid
+						// user_id:that.user.userId
+					},
+					header:{
+						'Authorization':'Bearer '+that.token
 					},
 					methods:"GET",
 					success:(res)=>{
-						console.log(res.data);
-						that.addressList=res.data
+						console.log(res);
+						that.addressList=res.data.data
 					}
 				})
 			},
 			editAddress(item){
-				let id=item.id
+				let id=item.addressId
+				uni.setStorageSync('address',item)
 				uni.navigateTo({
 					url: '/pages/mine/exchange/address_manage?id='+id
 				})

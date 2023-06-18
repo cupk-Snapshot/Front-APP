@@ -8,7 +8,7 @@
     <view class="login-form-content">
       <view class="input-item flex align-center">
         <view class="iconfont icon-user icon"></view>
-        <input v-model="loginForm.username" class="input" type="text" placeholder="请输入账号" maxlength="30" />
+        <input v-model="loginForm.username" class="input" type="text" placeholder="请输入用户名" maxlength="30" />
       </view>
       <view class="input-item flex align-center">
         <view class="iconfont icon-password icon"></view>
@@ -20,7 +20,7 @@
 	  </view>
       <view class="input-item flex align-center" style="width: 60%;margin: 0px;">
         <view class="iconfont icon-code icon"></view>
-        <input v-model="loginForm.code" type="number" class="input" placeholder="请输入验证码" maxlength="4" />
+        <input v-model="loginForm.code" type="number" class="input" placeholder="请输入验证码" maxlength="6" />
         <view class="login-code"> 
 		  <text class="code-text":class="{ gray: showTime }" @click="handleGetCodeClick">{{showTime ?currentCountTime+'再次获取验证码':'获取验证码'}}</text>
         </view >
@@ -77,13 +77,13 @@
 	  	if(this.showTime && this.currentCountTime !== this.countTime) return
 	  	this.currentCountTime
 		uni.request({
-			url:"",
-			method:"POST",
+			url:"http://localhost:9955/oauth/sms",
+			method:"GET",
 			data:{
-				mobile:this.mobile,
-				type:'注册发送验证码'
+				phone_num:this.loginForm.mobile
 			},
-			success: () => {
+			success: (res) => {
+				console.log(res)
 				uni.showToast({
 				  title: '验证码已发送',
 				  icon: 'success',
@@ -115,12 +115,16 @@
           this.$modal.loading("注册中，请耐心等待...");
 		  let that=this;
           uni.request({
-			  url:"",
+			  url:"http://localhost:9955/user/signup",
 			  method:"POST",
+			  header:{
+				  'Content-Type':'application/x-www-form-urlencoded'
+			  },
 			  data:{
 				  username:that.loginForm.username,
+				  phone_num:that.loginForm.mobile,
 				  password:that.loginForm.password,
-				  code:that.loginForm.code
+				  sms_code:that.loginForm.code
 			  },
 			  success: (res) => {
 				  console.log(res.data);
@@ -132,7 +136,14 @@
 				  that.$tab.reLaunch('/pages/login')
 			  },
 			  fail: () => {
-				  this.$modal.msgError("注册失败，请重试")
+				    uni.showModal({
+				      title: '提示',
+				      content: '注册失败',
+				      cancelText: '取消',
+				      confirmText: '确定',
+				      success: function(res) {
+				      }
+				    })
 			  }
 		  })
         }

@@ -85,8 +85,14 @@
 			};
 		},
 		onLoad(options) {
+			let that=this
 			uni.request({
-				url:""
+				url:'',
+				method:GET,
+				success(res) {
+					that.commentList=res
+					that.detail=res
+				}
 			});
 			that = this;
 			if (options && options.id) {

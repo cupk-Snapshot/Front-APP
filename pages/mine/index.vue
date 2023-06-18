@@ -9,12 +9,12 @@
           </view>
           <image v-if="avatar" @click="handleToAvatar" :src="avatar" class="cu-avatar xl round" mode="widthFix">
           </image>
-          <view v-if="!name" @click="handleToLogin" class="login-tip">
+          <view v-if="!user.username" @click="handleToLogin" class="login-tip">
             点击登录
           </view>
-          <view v-if="name" @click="handleToInfo" class="user-info">
+          <view v-if="user.username" @click="handleToInfo" class="user-info">
             <view class="u_title">
-              用户名：{{ user.userName }}
+              用户名：{{ user.username }}
             </view>
           </view>
         </view>
@@ -82,8 +82,7 @@
   
   export default {
     data() {
-      return { 
-        name: this.$store.state.user.name,
+      return {
         version: getApp().globalData.config.appInfo.version,
 		user:{}
       }
@@ -97,15 +96,9 @@
       }
     },
 	onLoad(option){
-		this.getUser();
+		this.user=uni.getStorageSync('user');
 	},
     methods: {
-		getUser() {
-			let that=this;
-		  getUserProfile().then(response => {
-		    that.user = response.data
-		  })
-		},
       handleToInfo() {
         this.$tab.navigateTo('/pages/mine/info/index')
       },

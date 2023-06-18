@@ -1,8 +1,6 @@
 <template>
   <view class="normal-login-container">
     <view class="logo-content align-center justify-center flex">
-      <image style="width: 100rpx;height: 100rpx;" :src="globalConfig.appInfo.logo" mode="widthFix">
-      </image>
       <text class="title">您好，请登录</text>
     </view>
     <view class="login-form-content">
@@ -13,13 +11,6 @@
       <view class="input-item flex align-center">
         <view class="iconfont icon-password icon"></view>
         <input v-model="loginForm.password" type="password" class="input" placeholder="请输入密码" maxlength="20" />
-      </view>
-      <view class="input-item flex align-center" style="width: 60%;margin: 0px;" v-if="captchaEnabled">
-        <view class="iconfont icon-code icon"></view>
-        <input v-model="loginForm.code" type="number" class="input" placeholder="请输入验证码" maxlength="4" />
-        <view class="login-code"> 
-          <image :src="codeUrl" @click="getCode" class="login-code-img"></image>
-        </view  >
       </view>
       <view class="action-btn">
         <button @click="handleLogin" class="login-btn cu-btn block bg-blue lg round">登录</button>
@@ -42,48 +33,43 @@
 
 <script>
   import { getCodeImg } from '@/api/login'
-
   export default {
     data() {
       return {
-        codeUrl: "",
-        captchaEnabled: true,
         globalConfig: getApp().globalData.config,
         loginForm: {
-          username: "admin",
-          password: "admin123",
-          code: "",
-          uuid: ''
+          username: "",
+          password: "",
         }
       }
     },
-    // created() {
-    //   this.getCode()
-    // },
+
     methods: {
-      // 获取图形验证码
-      getCode() {
-        getCodeImg().then(res => {
-          this.captchaEnabled = res.captchaEnabled === undefined ? true : res.captchaEnabled
-          if (this.captchaEnabled) {
-            this.codeUrl = 'data:image/gif;base64,' + res.img
-            this.loginForm.uuid = res.uuid
-          }
-        })
-      },
       // 登录方法
       async handleLogin() {
         if (this.loginForm.username === "") {
-          this.$modal.msgError("请输入您的账号")
+			uni.showModal({
+			  title: '提示',
+			  content: '请输入您的账号',
+			  cancelText: '取消',
+			  confirmText: '确定',
+			  success: function(res) {
+			  }
+			})
         } else if (this.loginForm.password === "") {
-          this.$modal.msgError("请输入您的密码")
+			uni.showModal({
+			  title: '提示',
+			  content: '请输入您的密码',
+			  cancelText: '取消',
+			  confirmText: '确定',
+			  success: function(res) {
+			  }
+			})
         } 
-		// else if (this.loginForm.code === "" && this.captchaEnabled) {
-  //         this.$modal.msgError("请输入验证码")
-  //       } 
 		else {
-          this.$modal.loading("登录中，请耐心等待...")
-          this.pwdLogin()
+		  this.$modal.loading("登录中，请耐心等待...")
+		  this.pwdLogin()
+          // this.pwdLogin()
 		  // uni.request({
 			 //  url:'/api'+'/oauth/token',
 			 //  method:"POST",
@@ -98,35 +84,30 @@
 			 //  	console.log(res)
 			 //  }
 		  // })
-        }
+		  }
       },
       // 密码登录
       async pwdLogin() {
-        this.$store.dispatch('Login', this.loginForm).then(() => {
+        this.$store.dispatch('Login', this.loginForm).then((res) => {
+		  console.log(res)
           this.$modal.closeLoading()
           this.loginSuccess()
         })
-		// .catch(() => {
-  //         if (this.captchaEnabled) {
-  //           this.getCode()
-  //         }
-  //       })
       },
       // 登录成功后，处理函数
       loginSuccess(result) {
         // 设置用户信息
-        this.$store.dispatch('GetInfo').then(res => {
-          this.$tab.reLaunch('/pages/index')
-        })
+       this.$tab.switchTab('/pages/index') 
       },
 	  toRegister(){
-	  		 this.$tab.navigateTo('/pages/register') 
+	  		this.$tab.navigateTo('/pages/register') 
 	  },
 	  tologinByMobile(){
-	  		 this.$tab.navigateTo('/pages/loginByMobile') 
-	  }
-    }
-  }
+	  		this.$tab.navigateTo('/pages/loginByMobile') 
+	  },
+    },
+}
+
 </script>
 
 <style lang="scss">

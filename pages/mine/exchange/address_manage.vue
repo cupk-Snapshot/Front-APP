@@ -9,22 +9,22 @@
 		</view>
 		<view class="row b-b">
 			<text class="tit">手机号</text>
-			<input class="input" type="number" v-model="addressData.mobile" placeholder="收货人手机号码" placeholder-class="placeholder" />
+			<input class="input" type="number" v-model="addressData.phoneNum" placeholder="收货人手机号码" placeholder-class="placeholder" />
 		</view>
 		<view class="row b-b" @click="showMulLinkageThreePicker">
 			<text class="tit">地区</text>
-			<input class="input" type="text"  v-model="addressData.address" disabled="true"   placeholder-class="placeholder" />
+			<input class="input" type="text"  v-model="addressData.area" disabled="true"   placeholder-class="placeholder" />
 		</view>
 		<view class="row b-b">
 			<text class="tit">地址</text>
-			<input class="input" type="text" v-model="addressData.addressName" placeholder="详细地址" placeholder-class="placeholder" />
+			<input class="input" type="text" v-model="addressData.address" placeholder="详细地址" placeholder-class="placeholder" />
 			<text class="icon-shouhuodizhi" @click="chooseLocation">选择位置</text>
 		</view>
 	
 		
 		<view class="row default-row">
 			<text class="tit">设为默认收货地址</text>
-			<switch :checked="addressData.default" color="#fa436a" @change="switchChange" />
+			<switch :checked="addressData.is_default" color="#fa436a" @change="switchChange" />
 		</view>
 		<button class="add-btn" @click="confirm">提交</button>
 	</view>
@@ -45,10 +45,10 @@
 			themeColor: '#007AFF',
 			addressData: {
 				name: '',
-				mobile: '',
-				addressName: '',
+				phoneNum: '',
 				address: '',
-				default: false
+				area: '',
+				is_default: false
 				},
 			addressList:[],
 			user:{}
@@ -56,22 +56,33 @@
 		},
 		//页面加载函数
 		onLoad(option){
-			this.getUser();
-			// this.loadAddress();
+			let that=this
+			that.user=uni.getStorageSync('user');
 			let title = '新增收货地址';
-			let that=this;
-			// if(option.type==='edit'){}
 			if(!!option.id){
 				title = '编辑收货地址';
+				that.addressData=uni.getStorageSync('address')
+				let def=0;
+				if(!that.addressData.is_default){
+					 def=0;
+				} 
+				else {
+					 def=1;
+					}
 				uni.request({
-					url:"",
+					url:"http://localhost:9955/user/address/update",
 					method:"POST",
 					header:{
-						token:this.token
+						'Authorization':'Bearer '+that.token
 					},
 					data:{
 						addressId:option.id,
-						userId:that.user.uuid
+						userId:that.user.user_id,
+						name: that.addressData.name,
+						phoneNum: that.addressData.phoneNum,
+						area: that.addressData.area,
+						address: that.addressData.address,
+						is_default:def
 					},
 					success:(res)=>{
 						console.log(res.data);
@@ -90,36 +101,19 @@
 			    this.user = response.data
 			  })
 			},
-		onConfirm(e) {
+		   onConfirm(e) {
 				console.log(e);
-				 this.addressData.address=e.label;
+				 this.addressData.area=e.label;
 				 console.log(this.addressData)
 			},
 			showMulLinkageThreePicker() {		
 			    this.$refs.mpvueCityPicker.show()
 			},
-			// locateAddress(_id){
-			// 	var li=this.addressList;
-			// 	for(var i in li){
-			// 		var ite=li[i];
-			// 		if(parseFloat(ite.id)===parseFloat(_id)){
-			// 			this.addressData=ite;
-			// 		}
-			// 	}
-			// 	console.log(this.addressData)
-			// },
-			// loadAddress(){
-			// 	let _this=this;
-			// 	this.addressList=this.$dataLocal("address")||[];
-			// },
-			
 			//选择默认开关
 			switchChange(e){
-				console.log(e.detail)
 				var li =this.addressList;
 				console.log(true===e.detail.value)
 				if(true===e.detail.value){
-					
 					for(let i in li){
 						let ite=li[i];
 						ite.default=false;
@@ -150,14 +144,16 @@
 					return;
 				}
 				
-				if(!data.address){
+				if(!data.area){
 					this.$toast('请选择所在区域');
 					return;
 				}
-				if(!data.addressName){
+				if(!data.address){
 					this.$toast('请在地图选择所在位置');
 					return;
 				}
+				if(!data.default) data.default=int(0);
+				else data.default=1;
 				// if(typeof data.id!="undefined"){
 				// 	for(let i in li){
 				// 		var ite=li[i];
@@ -171,19 +167,21 @@
 				// }		 
 				// this.$dataLocal("address",li);
 				let that=this
+				const token=uni.getStorageSync('SET_TOKEN')
 				uni.request({
-					url:"",
+					url:"http://localhost:9955/user/address/add",
 					method:"POST",
 					header:{
-						token:that.token
+						'Authorization':'Bearer '+token,
+						'Content-Type': 'application/x-www-form-urlencoded'
 					},
 					data:{
-						userId:that.user.uuid,
+						user_id:that.user.userId,
 						name:data.name,
-						mobile:data.mobile,
+						phone_num:data.mobile,
+						area:data.area,
 						address:data.address,
-						addressName:data.addressName,
-						default:data.default
+						is_default:data.default
 					},
 					success:(res)=>{
 						console.log(res);

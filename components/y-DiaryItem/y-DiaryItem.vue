@@ -11,7 +11,16 @@
 		</view>
 		<view class="content" @tap="toDetails(item.id)">
 			<view class="text-content">{{ item.title }}</view>
-			<view class="img-wrap padding-bottom-lg" v-if="item.imgList.length == 1">
+			
+			<view class="img-wrap padding-bottom-lg">
+				<view class="img-box">
+					<image v-if="item.imgList[0]" :src="item.imgList[0].url1" mode="widthFix" class="img"></image>
+					<image v-if="item.imgList[1]" :src="item.imgList[1].url2" mode="widthFix" class="img"></image>
+					<image v-if="item.imgList[2]" :src="item.imgList[2].url3" mode="widthFix" class="img"></image>
+				</view>
+			</view>
+			
+<!-- 			<view class="img-wrap padding-bottom-lg" v-if="item.imgList.length == 1">
 				<view class="img-box">
 					<image v-for="(child, idx) in item.imgList" :key="idx" :src="child.url" mode="widthFix" class="img" @tap.stop @tap="ViewImage(idx, item.imgList)"></image>
 				</view>
@@ -20,7 +29,7 @@
 				<view class="img-box" v-for="(child, idx) in item.imgList" :key="idx">
 					<image :src="child.url" mode="widthFix" class="img" @tap.stop @tap="ViewImage(idx, item.imgList)"></image>
 				</view>
-			</view>
+			</view> -->
 			<view class="bottom-btn padding-bottom-sm">
 				<view class="btn-item flex-center">
 					<image class="img" src="/static/images/diary/img_say.png" mode="aspectFit"></image>

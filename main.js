@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App'
 import store from './store' // store
 import plugins from './plugins' // plugins
-import './permission' // permission
+// import './permission' // permission
 Vue.use(plugins)
 
 Vue.config.productionTip = false
@@ -17,6 +17,9 @@ Vue.prototype.$toast = util.toast;
 import cacheUtil from "./utils/cacheUtil.js"
 Vue.prototype.$dataLocal = cacheUtil.data_local;
 Vue.prototype.$dataSession = cacheUtil.data_session;
+
+import storage from "./utils/storage.js"
+Vue.prototype.$storage = util.storage;
 
 const prePage = ()=>{
 	let pages = getCurrentPages();

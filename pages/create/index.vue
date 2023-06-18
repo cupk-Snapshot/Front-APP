@@ -1,10 +1,10 @@
 <template>
 	<view>
 		<uni-group title="举报信息" mode="card">
-			<uni-file-picker ref="files" :auto-upload="false" limit="6" title="最多上传6张图片"
+			<uni-file-picker ref="files" :auto-upload="false" limit="3" title="最多上传3张图片"
 			file-mediatype="image" mode="grid" :image-styles="ImageStyles" :value="img"
 			 @select="handleSelect" @delete="handleDelete" @success="success"></uni-file-picker>
-			<button type="primary" size="mini" @click="upload()">上传文件</button>
+			<button type="primary" size="mini" @click="uploadFile()">上传文件</button>
 			<view class="cu-form-group">
 				<view class="title" @tap="plateShow = true">车牌号</view>
 				<input placeholder="请点此输入" disabled="inputDisabled" @tap="plateShow = true" v-model.trim="plateNo" />
@@ -57,6 +57,7 @@
 				},
 				img:{
 				},
+				filePathsList:{},
 				imageBase64:'',
 				OtherReport:false,
 				OtherReportValue:'',
@@ -111,48 +112,80 @@
 			}
 		},
 		methods: {
+            uploadFile(){
+                var that=this;
+				let token=uni.getStorageSync('SET_TOKEN')
+				// const path = tempFilePaths.pop();
+				// this.filePathsList.push({url:path,name:""})
+                uni.chooseImage({
+                    success(res) {
+                        console.log(res)
+                        var tempFilePath=res.tempFilePaths;
+                        console.log("===================================================")
+						uni.uploadFile({
+                            url:'http://localhost:9955/file/oss/upload', //自己的后端接口（默认发送post请求）
+                            filePath:tempFilePath[0],
+                            name:"file",  //这里应为自己后端文件形参的名字
+                            formData:{
+                                "location":"picture" //其他属性
+                            },
+							header: {
+							    Authorization: 'Bearer '+token,
+							},
+                            success(res) {
+								console.log("===================上传结果=========================")
+                                console.log(res)
+								that.filePathsList = res.data.data
+								console.log(that.filePathsList)
+                            }
+                        })
+                    }
+                })
+            },
 			setPlate(plate) {
 				if (plate.length >= 7) this.plateNo = plate;
 				this.plateShow = false;
 			},
 			async handleSelect(res) { // 上传图片
-			    await this.uploadImg(res.tempFilePaths,1);
+				let token=uni.getStorageSync('SET_TOKEN') 
+				console.log(res.tempFilePaths)
+			    await this.uploadImg(res.tempFilePaths,token);
+				
 			},
 			async uploadImg(tempFilePaths, token) {
-			    console.log(token)
 			    if (!tempFilePaths.length) return;
-			    const path = tempFilePaths.pop();
-			    this.filePathsList.push({url:path,name:""})
+			    // const path = tempFilePaths.pop();
+			    // this.filePathsList.push({url:path,name:""})
 			    const [err, {data}] = await uni.uploadFile({
-			        url: '',
-			        filePath: path,
+			        url: 'http://localhost:9955/file/oss/upload',
+			        filePath: tempFilePaths[0],
 			        name: 'file',
+					formData:{
+						'location':'picture'
+					},
 			        header: {
-			            Authorization: token,
-			            "Content-Type": "multipart/form-data",
+			            Authorization: 'Bearer '+token,
 			        }
 			    });
 			    console.log("err", err)
+				console.log("===================上传结果=========================")
 			    console.log("data", data)
-			    if (!this.isGuid(data)) {
-			        // upload fail
-			        this.filePathsList.pop()
-			        uni.showToast({
-			            title: "上传失败",
-			            icon: "none"
-			        })
-			    }else{
+			    // if (!this.isGuid(data)) {
+			    //     // upload fail
+			    //     this.filePathsList.pop()
+			    //     uni.showToast({
+			    //         title: "上传失败",
+			    //         icon: "none"
+			    //     })
+			    // }else{
 			        // upload success
 			        this.filePathsList[this.filePathsList.length - 1].name = data
-			    }
-			    this.uploadImg(tempFilePaths,token);
+			    // }
+			    // this.uploadImg(tempFilePaths,token);
 			},
 			handleDelete(err) { // 删除图片
 			    const num = this.filePathsList.findIndex(v => v.url === err.tempFilePath);
 			    this.filePathsList.splice(num, 1);
-			},
-			upload(){
-				this.$refs.files.upload()
 			},
 			async postImage() {
 				const request = require('request')
@@ -252,10 +285,25 @@
 			    };
 			},
 			submit(){
+				let id=uni.getStorageSync('user').userId
+				let token=uni.getStorageSync('SET_TOKEN')
 				uni.request({
-					url:"",
+					url:"http://localhost:9955/user/report/submit",
+					method:"POST",
 					data:{
-						
+						user_id:id,
+						hphm:this.plateNo,
+						address:this.FormData.location,
+						type:'开车打电话',
+						pic1_url:this.filePathsList[0],
+						pic2_url:this.filePathsList[1],
+						pic3_url:this.filePathsList[2],
+					},
+					header: {
+					    Authorization: 'Bearer '+token,
+					},
+					success:(res)=>{
+						console.log(res)
 					}
 				})
 			}

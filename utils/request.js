@@ -5,7 +5,7 @@ import errorCode from '@/utils/errorCode'
 import { toast, showConfirm, tansParams } from '@/utils/common'
 
 let timeout = 10000
-// const baseUrl = '/api'
+const baseUrl = config.baseUrl
 
 const request = config => {
   // 是否需要设置 token
@@ -24,8 +24,8 @@ const request = config => {
     uni.request({
         method: config.method || 'get',
         timeout: config.timeout ||  timeout,
-        // url: config.baseUrl || baseUrl + config.url,
-		url: '/api' + config.url,
+        url: config.baseUrl || baseUrl + config.url,
+		// url: '/api' + config.url,
         data: config.data,
         header: config.header,
         dataType: 'json'

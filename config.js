@@ -1,15 +1,14 @@
 // 应用全局配置
 module.exports = {
-  // baseUrl: 'http://82.156.156.143:9955',
-  devServer: {
-      proxy: {
-        '/api': {
-          target: 'http://82.156.156.143:9955',
-          changeOrigin: true
-        }
-      }
-    },
-  // baseUrl: 'http://localhost:8080',
+  baseUrl: 'http://localhost:9955',
+  // devServer: {
+  //     proxy: {
+  //       '/api': {
+  //         target: 'http://82.156.156.143:9955',
+  //         changeOrigin: true
+  //       }
+  //     }
+  //   },
   // 应用信息
   appInfo: {
     // 应用名称
