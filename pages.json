@@ -124,7 +124,15 @@
             "path" : "pages/loginByMobile",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "",
+                "navigationBarTitleText": "手机登录",
+                "enablePullDownRefresh": false
+            }
+        }
+        ,{
+            "path" : "pages/mine/reports/mineReports",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "我的举报",
                 "enablePullDownRefresh": false
             }
             

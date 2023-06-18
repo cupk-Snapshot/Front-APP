@@ -35,7 +35,7 @@
           <view class="iconfont_mine icon-weifaguizeguanli text-blue icon"></view>
           <text class="text">奖励规则</text>
         </view>
-        <view class="action-item" @click="handleBuilding">
+        <view class="action-item" @click="handleReports">
           <view class="iconfont_mine icon-jubao text-blue icon"></view>
           <text class="text">我的举报</text>
         </view>
@@ -111,6 +111,9 @@
       handleToLogin() {
         this.$tab.reLaunch('/pages/login')
       },
+	  handleReports() {
+		  this.$tab.navigateTo('/pages/mine/reports/mineReports')
+	  },
       handleToAvatar() {
         this.$tab.navigateTo('/pages/mine/avatar/index')
       },
