@@ -5,11 +5,7 @@
 			<view class="wrapper">
 				<view class="address-box">
 					<text v-if="item.default" class="tag">默认</text>
-<<<<<<< Updated upstream:pages/mine/exchange/settings.vue
-					<text class="address">{{item.pickerText}}{{item.addressName}} {{item.area}}</text>
-=======
 					<text class="address">{{item.area}} {{item.address}}</text>
->>>>>>> Stashed changes:pages/mine/exchange/address_setting.vue
 				</view>
 				<view class="u-box">
 					<text class="name">{{item.name}}</text>
@@ -18,11 +14,7 @@
 			</view>
 			<uni-icons type="compose" size="16" @click="editAddress(item)"></uni-icons>
 			<text class="" @tap="editAddress(item)">编辑</text>
-<<<<<<< Updated upstream:pages/mine/exchange/settings.vue
-			<uni-icons type="compose" size="16" @click="handleRemove(item.id)"></uni-icons>
-=======
 			<uni-icons type="trash-filled" size="16" @click="handleRemove(item.addressId)"></uni-icons>
->>>>>>> Stashed changes:pages/mine/exchange/address_setting.vue
 			<text class="" @tap="handleRemove(item.id)">删除</text>
 		</view>
 		
@@ -31,38 +23,28 @@
 </template>
 
 <script>
+	import { getUserProfile } from '@/api/system/user'
 	export default {
 		data() {
 			return {
 				source: 0,
-<<<<<<< Updated upstream:pages/mine/exchange/settings.vue
-				addressList: []
-=======
 				addressList:[],
 				user:{},
 				token:''
->>>>>>> Stashed changes:pages/mine/exchange/address_setting.vue
 			}
 		},
 		onLoad(option){
 			this.source = option.source;
-<<<<<<< Updated upstream:pages/mine/exchange/settings.vue
-			
-=======
 			this.user=uni.getStorageSync('user');
 			this.token=uni.getStorageSync('SET_TOKEN');
 			console.log(this.token)
 			this.loadAddress();
->>>>>>> Stashed changes:pages/mine/exchange/address_setting.vue
 		},
 		onShow(){
 			this.loadAddress();
 		},
 		methods: {
 			loadAddress(){
-<<<<<<< Updated upstream:pages/mine/exchange/settings.vue
-				this.addressList=this.$dataLocal("address");
-=======
 				let that=this;
 				uni.request({
 					url:"http://localhost:9955/user/address/all/3",
@@ -78,44 +60,54 @@
 						that.addressList=res.data.data
 					}
 				})
->>>>>>> Stashed changes:pages/mine/exchange/address_setting.vue
 			},
 			editAddress(item){
 				let id=item.addressId
 				uni.setStorageSync('address',item)
 				uni.navigateTo({
-					url: '/pages/mine/exchange/add_address?id='+id
-					})
+					url: '/pages/mine/exchange/address_manage?id='+id
+				})
 			},
 			//删除地址
-			handleRemove(addressId) {
+			handleRemove(addressId){
 				const that = this
 				uni.showModal({
 					title: "提示",
 					content: "您确定要删除当前收货地址吗?",
 					success: function (res) {
-			    		if (res.confirm) {
-							var list =that.addressList;
-							const item = list.filter(address => address.id !== addressId);
-							that.$dataLocal("address",item);
-							uni.showToast({
-								title: '删除成功',
-								duration: 2000
-							});
+			    		if (res.confirm){
+							uni.request({
+									url: "",
+									head:{
+										token:that.token
+									},
+									data:{
+										addressId:addressId,
+										userId:that.user.uuid
+									},
+									success: (resp) => {
+										if(resp.data.code == 200){//删除成功
+										that.addressList=resp.data.
+										uni.showToast({
+											title: '删除成功',
+											duration: 2000
+										});
+								        }
+									},
+							})
 							that.loadAddress()
-			    		}
+						}
 						else if (res.cancel) {
 			    			console.log('用户点击取消');
 			    		}	
 			    	}
-			  });
-					
+			  });	
 			},
 			//选择地址
 			checkAddress(item){
 				if(this.source == 1){
 					//this.$api.prePage()获取上一页实例，在App.vue定义
-					//this.$api.prePage().addressData = item;
+					this.$api.prePage().addressData = item;
 					this.setDefault(item)
 					uni.navigateBack()
 				}
@@ -132,11 +124,12 @@
 						itee.default=true;
 					}
 				}
-				this.$dataLocal("address",li);
+				// this.$dataLocal("address",li);
+				this.addressList=li
 			},
 			addAddress(){
 				uni.navigateTo({
-					url: `/pages/mine/exchange/add_address`
+					url: `/pages/mine/exchange/address_manage`
 				})
 			},
 			//添加或修改成功之后回调
@@ -178,6 +171,9 @@
 			border-radius: 4upx;
 			padding: 4upx 10upx;
 			line-height: 1;
+			display: inline-block;
+			height:35rpx;
+			width:66rpx;
 		}
 		.address{
 			font-size: 30upx;

@@ -25,8 +25,8 @@
 				<uni-forms-item label="时间" required>
 					<uni-datetime-picker type="datetime" return-type="timestamp" v-model="FormData.datetime"/>
 				</uni-forms-item>
-				<uni-forms-item label="类别" required name="reports">
-					<uni-tag class="reports" v-for="item in FormData.reports" :circle="true" :inverted="item.inverted" 
+				<uni-forms-item class="reports" label="类别" required name="reports">
+					<uni-tag class="report" v-for="item in FormData.reports" :circle="true" :inverted="item.inverted" 
 						:text="item.text" type="primary" @click="setInverted(item)"/>
 				</uni-forms-item>
 				<uni-easyinput v-if="OtherReport" :value="OtherReportValue" placeholder="请输入内容"></uni-easyinput>
@@ -284,9 +284,6 @@
 					callback(response);
 			    };
 			},
-<<<<<<< Updated upstream
-
-=======
 			submit(){
 				let id=uni.getStorageSync('user').userId
 				let token=uni.getStorageSync('SET_TOKEN')
@@ -310,7 +307,6 @@
 					}
 				})
 			}
->>>>>>> Stashed changes
 		}
 	}
 </script>
@@ -320,7 +316,14 @@ page {
 	background-color: #fff;
 }
 .reports{
-	
+	height:100%;
+	width:100%;
+	position: relative;
+}
+.report{
+	margin-top: 14rpx;
+	margin-right: 14rpx;
+	display: inline-block;
 }
 .cu-form-group {
 	border: 1px solid #eee;

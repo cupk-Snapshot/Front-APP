@@ -12,32 +12,19 @@
 			<input class="input" type="number" v-model="addressData.phoneNum" placeholder="收货人手机号码" placeholder-class="placeholder" />
 		</view>
 		<view class="row b-b" @click="showMulLinkageThreePicker">
-<<<<<<< Updated upstream:pages/mine/exchange/add_address.vue
-			<text class="tit">区域</text>
-			<input class="input" type="text"  v-model="addressData.pickerText" disabled="true"   placeholder-class="placeholder" />
-=======
 			<text class="tit">地区</text>
 			<input class="input" type="text"  v-model="addressData.area" disabled="true"   placeholder-class="placeholder" />
->>>>>>> Stashed changes:pages/mine/exchange/address_manage.vue
 		</view>
 		<view class="row b-b">
 			<text class="tit">地址</text>
 			<input class="input" type="text" v-model="addressData.address" placeholder="详细地址" placeholder-class="placeholder" />
 			<text class="icon-shouhuodizhi" @click="chooseLocation">选择位置</text>
 		</view>
-		<view class="row b-b"> 
-			<text class="tit">门牌号</text>
-			<input class="input" type="text" v-model="addressData.area" placeholder="楼号、门牌(选填)" placeholder-class="placeholder" />
-		</view>
+	
 		
 		<view class="row default-row">
-<<<<<<< Updated upstream:pages/mine/exchange/add_address.vue
-			<text class="tit">设为默认</text>
-			<switch :checked="addressData.default" color="#fa436a" @change="switchChange" />
-=======
 			<text class="tit">设为默认收货地址</text>
 			<switch :checked="addressData.is_default" color="#fa436a" @change="switchChange" />
->>>>>>> Stashed changes:pages/mine/exchange/address_manage.vue
 		</view>
 		<button class="add-btn" @click="confirm">提交</button>
 	</view>
@@ -45,6 +32,7 @@
 
 <script>
 	import mpvueCityPicker from '@/components/mpvue-citypicker/mpvueCityPicker.vue'
+	import { getUserProfile } from '@/api/system/user'
 	
 	export default {
 		components: {
@@ -55,41 +43,19 @@
 			editCityPicker:true,
 			cityPickerValueDefault: [0, 0, 1],
 			themeColor: '#007AFF',
-<<<<<<< Updated upstream:pages/mine/exchange/add_address.vue
-			
-				addressData: {
-					pickerText: '',
-					name: '',
-					mobile: '',
-					addressName: '',
-					address: '',
-					area: '',
-					default: false
-=======
 			addressData: {
 				name: '',
 				phoneNum: '',
 				address: '',
 				area: '',
 				is_default: false
->>>>>>> Stashed changes:pages/mine/exchange/address_manage.vue
 				},
-				addressList:[],
+			addressList:[],
+			user:{}
 			}
 		},
+		//页面加载函数
 		onLoad(option){
-<<<<<<< Updated upstream:pages/mine/exchange/add_address.vue
-			this.loadAddress();
-			let title = '新增收货地址';
-			if(option.type==='edit'){
-				
-			}
-
-			if(!!option.id){
-				title = '编辑收货地址';
-				this.locateAddress(option.id)
-				
-=======
 			let that=this
 			that.user=uni.getStorageSync('user');
 			let title = '新增收货地址';
@@ -124,19 +90,12 @@
 					}
 				// this.locateAddress(option.id)
 				})
->>>>>>> Stashed changes:pages/mine/exchange/address_manage.vue
 			}
 			uni.setNavigationBarTitle({ 
 				title
 			})
 		},
 		methods: {
-<<<<<<< Updated upstream:pages/mine/exchange/add_address.vue
-		onConfirm(e) {
-				console.log(e);
-				 this.addressData.pickerText=e.label;
-				 console.log( this.addressData)
-=======
 			getUser() {
 			  getUserProfile().then(response => {
 			    this.user = response.data
@@ -146,31 +105,11 @@
 				console.log(e);
 				 this.addressData.area=e.label;
 				 console.log(this.addressData)
->>>>>>> Stashed changes:pages/mine/exchange/address_manage.vue
 			},
-			
 			showMulLinkageThreePicker() {		
 			    this.$refs.mpvueCityPicker.show()
 			},
-<<<<<<< Updated upstream:pages/mine/exchange/add_address.vue
-			locateAddress(_id){
-				var li=this.addressList;
-				for(var i in li){
-					var ite=li[i];
-					if(parseFloat(ite.id)===parseFloat(_id)){
-						this.addressData=ite;
-					}
-				}
-				console.log(this.addressData)
-			},
-			loadAddress(){
-				let _this=this;
-				this.addressList=this.$dataLocal("address")||[];
-
-			},
-=======
 			//选择默认开关
->>>>>>> Stashed changes:pages/mine/exchange/address_manage.vue
 			switchChange(e){
 				var li =this.addressList;
 				console.log(true===e.detail.value)
@@ -183,21 +122,18 @@
 				console.log(li);
 				this.addressData.default = e.detail.value;
 			},
-			
 			//地图选择地址
 			chooseLocation(){
 				let that=this
 				uni.chooseLocation({
 					success: (data)=> {
-						that.addressData.addressName = data.address;
 						that.addressData.address = data.address;
 					}
 				})
 			},
-			
 			//提交
 			confirm(){
-				let li=this.addressList;
+				//let li=this.addressList;
 				let data = this.addressData;
 				if(!data.name){
 					this.$toast('请填写收货人姓名');
@@ -208,11 +144,7 @@
 					return;
 				}
 				
-<<<<<<< Updated upstream:pages/mine/exchange/add_address.vue
-				if(!data.pickerText){
-=======
 				if(!data.area){
->>>>>>> Stashed changes:pages/mine/exchange/address_manage.vue
 					this.$toast('请选择所在区域');
 					return;
 				}
@@ -220,15 +152,6 @@
 					this.$toast('请在地图选择所在位置');
 					return;
 				}
-<<<<<<< Updated upstream:pages/mine/exchange/add_address.vue
-				
-				if(typeof data.id!="undefined"){
-					for(let i in li){
-						var ite=li[i];
-						if(parseFloat(ite.id)===parseFloat(data.id)){
-							ite=data;
-						}
-=======
 				if(!data.default) data.default=int(0);
 				else data.default=1;
 				// if(typeof data.id!="undefined"){
@@ -262,13 +185,8 @@
 					},
 					success:(res)=>{
 						console.log(res);
->>>>>>> Stashed changes:pages/mine/exchange/address_manage.vue
 					}
-				}else{
-					data.id=li.length;
-					li.push(data);
-				}		 
-				this.$dataLocal("address",li);
+				})
 				setTimeout(()=>{
 					uni.navigateBack()
 				}, 800)

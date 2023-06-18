@@ -22,6 +22,12 @@
       <text @click="handleUserAgrement" class="text-blue">《用户协议》</text>
       <text @click="handlePrivacy" class="text-blue">《隐私协议》</text>
     </view>
+	<view class="register1 text-center">
+		<text @click="tologinByMobile" class="text-blue">手机号登录</text>
+	</view>
+	<view class="register text-center">
+		<text @click="toRegister" class="text-blue">还没有账号，先去注册</text>
+	</view>
   </view>
 </template>
 
@@ -91,14 +97,6 @@
       // 登录成功后，处理函数
       loginSuccess(result) {
         // 设置用户信息
-<<<<<<< Updated upstream
-        this.$store.dispatch('GetInfo').then(res => {
-          this.$tab.reLaunch('/pages/index')
-        })
-      }
-    }
-  }
-=======
        this.$tab.switchTab('/pages/index') 
       },
 	  toRegister(){
@@ -110,14 +108,20 @@
     },
 }
 
->>>>>>> Stashed changes
 </script>
 
 <style lang="scss">
   page {
     background-color: #ffffff;
   }
-
+  .register{
+  		color: #333;
+  		margin-top: 40px;
+  }
+  .register1{
+  		color: #333;
+  		margin-top: 40px;
+  }
   .normal-login-container {
     width: 100%;
 
@@ -174,6 +178,7 @@
         margin-top: 20px;
       }
       
+	  
       .login-code {
         height: 38px;
         float: right;

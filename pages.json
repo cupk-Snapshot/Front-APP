@@ -87,16 +87,13 @@
       "navigationBarTitleText": "积分明细"
     }
   }, {
-    "path" : "pages/mine/exchange/settings",
+    "path" : "pages/mine/exchange/address_setting",
     "style" :{
             "navigationBarTitleText": "设置收货信息",
             "enablePullDownRefresh": false
             }  
   }
         ,{
-<<<<<<< Updated upstream
-            "path" : "pages/mine/exchange/add_address",
-=======
             "path" : "pages/mine/exchange/address_manage",
             "style" :                                                                                    
             {
@@ -125,7 +122,6 @@
         }
         ,{
             "path" : "pages/loginByMobile",
->>>>>>> Stashed changes
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "",

@@ -18,8 +18,6 @@ import cacheUtil from "./utils/cacheUtil.js"
 Vue.prototype.$dataLocal = cacheUtil.data_local;
 Vue.prototype.$dataSession = cacheUtil.data_session;
 
-<<<<<<< Updated upstream
-=======
 import storage from "./utils/storage.js"
 Vue.prototype.$storage = util.storage;
 
@@ -42,7 +40,6 @@ const json = type=>{
 // 可能要加msg
 Vue.prototype.$api = {json, prePage};
 
->>>>>>> Stashed changes
 import $mRouter from './utils/router';
 Vue.prototype.$mRouter = $mRouter;
 const app = new Vue({
