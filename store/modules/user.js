@@ -27,14 +27,6 @@ const user = {
       state.avatar = avatar
       storage.set(constant.avatar, avatar)
     },
-    SET_ROLES: (state, roles) => {
-      state.roles = roles
-      storage.set(constant.roles, roles)
-    },
-    SET_PERMISSIONS: (state, permissions) => {
-      state.permissions = permissions
-      storage.set(constant.permissions, permissions)
-    }
   },
 
   actions: {
@@ -42,12 +34,10 @@ const user = {
     Login({ commit }, userInfo) {
       const username = userInfo.username.trim()
       const password = userInfo.password
-      const code = userInfo.code
-      const uuid = userInfo.uuid
       return new Promise((resolve, reject) => {
-        login(username, password, code, uuid).then(res => {
-          setToken(res.token)
-          commit('SET_TOKEN', res.token)
+        login(username, password).then(res => {
+		  uni.setStorageSync('SET_TOKEN',res.data.access_token)
+		  uni.setStorageSync('user',res.data.user)
           resolve()
         }).catch(error => {
           reject(error)
@@ -62,12 +52,6 @@ const user = {
           const user = res.user
           const avatar = (user == null || user.avatar == "" || user.avatar == null) ? require("@/static/images/profile.jpg") : baseUrl + user.avatar
           const username = (user == null || user.userName == "" || user.userName == null) ? "" : user.userName
-          if (res.roles && res.roles.length > 0) {
-            commit('SET_ROLES', res.roles)
-            commit('SET_PERMISSIONS', res.permissions)
-          } else {
-            commit('SET_ROLES', ['ROLE_DEFAULT'])
-          }
           commit('SET_NAME', username)
           commit('SET_AVATAR', avatar)
           resolve(res)
@@ -82,9 +66,8 @@ const user = {
       return new Promise((resolve, reject) => {
         logout(state.token).then(() => {
           commit('SET_TOKEN', '')
-          commit('SET_ROLES', [])
-          commit('SET_PERMISSIONS', [])
           removeToken()
+		  uni.removeStorageSync('user_id')
           storage.clean()
           resolve()
         }).catch(error => {

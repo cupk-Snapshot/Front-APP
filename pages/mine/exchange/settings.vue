@@ -5,7 +5,11 @@
 			<view class="wrapper">
 				<view class="address-box">
 					<text v-if="item.default" class="tag">默认</text>
+<<<<<<< Updated upstream:pages/mine/exchange/settings.vue
 					<text class="address">{{item.pickerText}}{{item.addressName}} {{item.area}}</text>
+=======
+					<text class="address">{{item.area}} {{item.address}}</text>
+>>>>>>> Stashed changes:pages/mine/exchange/address_setting.vue
 				</view>
 				<view class="u-box">
 					<text class="name">{{item.name}}</text>
@@ -14,7 +18,11 @@
 			</view>
 			<uni-icons type="compose" size="16" @click="editAddress(item)"></uni-icons>
 			<text class="" @tap="editAddress(item)">编辑</text>
+<<<<<<< Updated upstream:pages/mine/exchange/settings.vue
 			<uni-icons type="compose" size="16" @click="handleRemove(item.id)"></uni-icons>
+=======
+			<uni-icons type="trash-filled" size="16" @click="handleRemove(item.addressId)"></uni-icons>
+>>>>>>> Stashed changes:pages/mine/exchange/address_setting.vue
 			<text class="" @tap="handleRemove(item.id)">删除</text>
 		</view>
 		
@@ -27,22 +35,54 @@
 		data() {
 			return {
 				source: 0,
+<<<<<<< Updated upstream:pages/mine/exchange/settings.vue
 				addressList: []
+=======
+				addressList:[],
+				user:{},
+				token:''
+>>>>>>> Stashed changes:pages/mine/exchange/address_setting.vue
 			}
 		},
 		onLoad(option){
 			this.source = option.source;
+<<<<<<< Updated upstream:pages/mine/exchange/settings.vue
 			
+=======
+			this.user=uni.getStorageSync('user');
+			this.token=uni.getStorageSync('SET_TOKEN');
+			console.log(this.token)
+			this.loadAddress();
+>>>>>>> Stashed changes:pages/mine/exchange/address_setting.vue
 		},
 		onShow(){
 			this.loadAddress();
 		},
 		methods: {
 			loadAddress(){
+<<<<<<< Updated upstream:pages/mine/exchange/settings.vue
 				this.addressList=this.$dataLocal("address");
+=======
+				let that=this;
+				uni.request({
+					url:"http://localhost:9955/user/address/all/3",
+					data:{
+						// user_id:that.user.userId
+					},
+					header:{
+						'Authorization':'Bearer '+that.token
+					},
+					methods:"GET",
+					success:(res)=>{
+						console.log(res);
+						that.addressList=res.data.data
+					}
+				})
+>>>>>>> Stashed changes:pages/mine/exchange/address_setting.vue
 			},
 			editAddress(item){
-				let id=item.id
+				let id=item.addressId
+				uni.setStorageSync('address',item)
 				uni.navigateTo({
 					url: '/pages/mine/exchange/add_address?id='+id
 					})

@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App'
 import store from './store' // store
 import plugins from './plugins' // plugins
-import './permission' // permission
+// import './permission' // permission
 Vue.use(plugins)
 
 Vue.config.productionTip = false
@@ -18,6 +18,31 @@ import cacheUtil from "./utils/cacheUtil.js"
 Vue.prototype.$dataLocal = cacheUtil.data_local;
 Vue.prototype.$dataSession = cacheUtil.data_session;
 
+<<<<<<< Updated upstream
+=======
+import storage from "./utils/storage.js"
+Vue.prototype.$storage = util.storage;
+
+const prePage = ()=>{
+	let pages = getCurrentPages();
+	let prePage = pages[pages.length - 2];
+	// #ifdef H5
+	return prePage;
+	// #endif
+	return prePage.$vm;
+}
+const json = type=>{
+	//模拟异步请求数据
+	return new Promise(resolve=>{
+		setTimeout(()=>{
+			resolve(Json[type]);
+		}, 500)
+	})
+}
+// 可能要加msg
+Vue.prototype.$api = {json, prePage};
+
+>>>>>>> Stashed changes
 import $mRouter from './utils/router';
 Vue.prototype.$mRouter = $mRouter;
 const app = new Vue({

@@ -85,7 +85,20 @@
 			};
 		},
 		onLoad(options) {
+<<<<<<< Updated upstream
 			that = this
+=======
+			let that=this
+			uni.request({
+				url:'',
+				method:GET,
+				success(res) {
+					that.commentList=res
+					that.detail=res
+				}
+			});
+			that = this;
+>>>>>>> Stashed changes
 			if (options && options.id) {
 				that.detailId = options.id
 				let list = that.$store.state.diary.cardList

@@ -9,12 +9,16 @@
           </view>
           <image v-if="avatar" @click="handleToAvatar" :src="avatar" class="cu-avatar xl round" mode="widthFix">
           </image>
-          <view v-if="!name" @click="handleToLogin" class="login-tip">
+          <view v-if="!user.username" @click="handleToLogin" class="login-tip">
             点击登录
           </view>
-          <view v-if="name" @click="handleToInfo" class="user-info">
+          <view v-if="user.username" @click="handleToInfo" class="user-info">
             <view class="u_title">
+<<<<<<< Updated upstream
               用户名：{{ name }}
+=======
+              用户名：{{ user.username }}
+>>>>>>> Stashed changes
             </view>
           </view>
         </view>
@@ -82,8 +86,13 @@
   export default {
     data() {
       return {
+<<<<<<< Updated upstream
         name: this.$store.state.user.name,
         version: getApp().globalData.config.appInfo.version
+=======
+        version: getApp().globalData.config.appInfo.version,
+		user:{}
+>>>>>>> Stashed changes
       }
     },
     computed: {
@@ -94,6 +103,12 @@
         return uni.getSystemInfoSync().windowHeight - 50
       }
     },
+<<<<<<< Updated upstream
+=======
+	onLoad(option){
+		this.user=uni.getStorageSync('user');
+	},
+>>>>>>> Stashed changes
     methods: {
       handleToInfo() {
         this.$tab.navigateTo('/pages/mine/info/index')

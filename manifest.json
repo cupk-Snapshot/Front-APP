@@ -36,7 +36,9 @@
                     "<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>",
                     "<uses-feature android:name=\"android.hardware.camera\"/>",
                     "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
-                ]
+                ],
+                "abiFilters" : [ "armeabi-v7a", "arm64-v8a", "x86" ],
+                "minSdkVersion" : 23
             },
             "ios" : {},
             "sdkConfigs" : {
@@ -51,6 +53,10 @@
                     }
                 },
                 "maps" : {}
+            },
+            "splashscreen" : {
+                "androidStyle" : "common",
+                "useOriginalMsgbox" : true
             }
         }
     },
@@ -72,13 +78,8 @@
     "h5" : {
         "template" : "static/index.html",
         "devServer" : {
-            "port" : 9090,
+            "port" : 9084,
             "https" : false
-        },
-        "title" : "随手拍",
-        "router" : {
-            "mode" : "hash",
-            "base" : "./"
         },
         "sdkConfigs" : {
             "maps" : {
@@ -88,6 +89,20 @@
                     "serviceHost" : ""
                 }
             }
+        },
+        "router" : {
+            "mode" : "hash",
+            "base" : "./"
+        },
+        "optimization" : {
+            "treeShaking" : {
+                "enable" : true
+            }
         }
+    },
+    "title" : "随手拍",
+    "router" : {
+        "mode" : "hash",
+        "base" : "/h5/"
     }
 }

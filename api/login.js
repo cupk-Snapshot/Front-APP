@@ -1,19 +1,21 @@
 import request from '@/utils/request'
 
 // 登录方法
-export function login(username, password, code, uuid) {
+export function login(username, password) {
   const data = {
     username,
     password,
-    code,
-    uuid
+	grant_type:"password",
+	client_id:"snapshot",
+	client_secret:"snapshot-secret"
   }
   return request({
-    'url': '/login',
+    'url': '/oauth/token',
     headers: {
-      isToken: false
+      isToken: false,
+	   'Content-Type': 'application/x-www-form-urlencoded'
     },
-    'method': 'post',
+    'method': 'GET',
     'data': data
   })
 }
@@ -21,7 +23,7 @@ export function login(username, password, code, uuid) {
 // 获取用户详细信息
 export function getInfo() {
   return request({
-    'url': '/getInfo',
+    'url': '/user/info/2',
     'method': 'get'
   })
 }
@@ -35,13 +37,13 @@ export function logout() {
 }
 
 // 获取验证码
-export function getCodeImg() {
-  return request({
-    'url': '/captchaImage',
-    headers: {
-      isToken: false
-    },
-    method: 'get',
-    timeout: 20000
-  })
-}
+// export function getCodeImg() {
+//   return request({
+//     'url': '/captchaImage',
+//     headers: {
+//       isToken: false
+//     },
+//     method: 'get',
+//     timeout: 20000
+//   })
+// }

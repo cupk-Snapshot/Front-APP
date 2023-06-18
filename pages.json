@@ -94,7 +94,38 @@
             }  
   }
         ,{
+<<<<<<< Updated upstream
             "path" : "pages/mine/exchange/add_address",
+=======
+            "path" : "pages/mine/exchange/address_manage",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/mine/exchange/history",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "兑换历史",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/register",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "注册",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/loginByMobile",
+>>>>>>> Stashed changes
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "",
