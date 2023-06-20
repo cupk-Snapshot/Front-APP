@@ -129,6 +129,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/mine/reports/reports",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "我的举报",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
   "tabBar": {
     "color": "#000000",

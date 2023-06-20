@@ -3,11 +3,11 @@
 		<view class="t-body" v-if="scoreList && scoreList.length>0">
 			<view class="t-jf-item t-flex-row-sb" v-for="(item,index) in scoreList" wx:key="index">
 				<view class="t-flex-col-s t-lt">
-					<text>{{item.type}}</text>
+					<text>{{item.description}}</text>
 					<text
-						:class="[{'t-hx-color':item.score<0,'t-p-color':item.score>0}]">{{item.score>0?("+"+item.score):item.score}}</text>
+						:class="[{'t-hx-color':item.exchange<0,'t-p-color':item.exchange>0}]">{{item.exchange>0?("+"+item.exchange):item.exchange}}</text>
 				</view>
-				<view class="t-rt">{{item.createAt}}</view>
+				<view class="t-rt">{{item.createTime}}</view>
 			</view>
 		</view>
 		<view class="t-more t-flex-row">
@@ -20,44 +20,54 @@
 	export default {
 		data() {
 			return {
-				scoreList: [{
-						type: '分享好友',
-						score: 100,
-						createAt: '2022-12-09'
-					},
-					{
-						type: '兑换商品',
-						score: -5000,
-						createAt: '2022-11-08'
-					},
-					{
-						type: '分享好友',
-						score: 100,
-						createAt: '2022-10-09'
-					},
-					{
-						type: '浏览课程',
-						score: 1000,
-						createAt: '2022-09-19'
-					},
-					{
-						type: '分享好友',
-						score: 100,
-						createAt: '2022-09-09'
-					},
+				scoreList: [
+					// {
+					// 	type: '分享好友',
+					// 	score: 100,
+					// 	createAt: '2022-12-09'
+					// },
+					// {
+					// 	type: '兑换商品',
+					// 	score: -5000,
+					// 	createAt: '2022-11-08'
+					// },
+					// {
+					// 	type: '分享好友',
+					// 	score: 100,
+					// 	createAt: '2022-10-09'
+					// },
+					// {
+					// 	type: '浏览课程',
+					// 	score: 1000,
+					// 	createAt: '2022-09-19'
+					// },
+					// {
+					// 	type: '分享好友',
+					// 	score: 100,
+					// 	createAt: '2022-09-09'
+					// },
 				],
 				user:{}
 			}
 		},
 		onLoad(){
-			this.getUser()
+			this.token=uni.getStorageSync('SET_TOKEN')
+			this.user=uni.getStorageSync('user')
+			uni.request({
+				url:'http://localhost:9955/user/points/details',
+				method:'GET',
+				header:{
+					 Authorization: 'Bearer '+this.token,
+				},
+				data: {
+					user_id: this.user.userId
+				},
+				success:(res) =>{
+					this.scoreList=res.data.data.details
+				}
+			})
 		},
 		methods: {
-            getUser(){
-              getUserProfile().then(response => {
-                this.user = response.data
-              })
-            },
 		}
 	}
 </script>

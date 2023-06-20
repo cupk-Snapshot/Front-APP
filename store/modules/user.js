@@ -1,7 +1,7 @@
 import config from '@/config'
 import storage from '@/utils/storage'
 import constant from '@/utils/constant'
-import { login, logout, getInfo } from '@/api/login'
+import { login, logout, getInfo,loginOn } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 
 const baseUrl = config.baseUrl
@@ -45,6 +45,19 @@ const user = {
       })
     },
 
+ LoginOn({ commit }, userInfo) {
+      const phone_num = userInfo.mobile
+      const sms_code = userInfo.code
+      return new Promise((resolve, reject) => {
+        loginOn(phone_num, sms_code).then(res => {
+		  uni.setStorageSync('SET_TOKEN',res.data.access_token)
+		  uni.setStorageSync('user',res.data.user)
+          resolve()
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
     // 获取用户信息
     GetInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
