@@ -117,6 +117,36 @@
 			}
 		},
 		methods: {
+            uploadFile(){
+                var that=this;
+				let token=uni.getStorageSync('SET_TOKEN')
+				// const path = tempFilePaths.pop();
+				// this.filePathsList.push({url:path,name:""})
+                uni.chooseImage({
+                    success(res) {
+                        console.log(res)
+                        var tempFilePath=res.tempFilePaths;
+                        console.log("===================================================")
+						uni.uploadFile({
+                            url:'http://localhost:9955/file/oss/upload', //自己的后端接口（默认发送post请求）
+                            filePath:tempFilePath[0],
+                            name:"file",  //这里应为自己后端文件形参的名字
+                            formData:{
+                                "location":"picture" //其他属性
+                            },
+							header: {
+							    Authorization: 'Bearer '+token,
+							},
+                            success(res) {
+								console.log("===================上传结果=========================")
+                                console.log(res)
+								that.filePathsList = res.data.data
+								console.log(that.filePathsList)
+                            }
+                        })
+                    }
+                })
+            },
 			setPlate(plate) {
 				if (plate.length >= 7) this.plateNo = plate;
 				this.plateShow = false;

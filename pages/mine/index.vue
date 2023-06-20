@@ -114,6 +114,9 @@
       handleToLogin() {
         this.$tab.reLaunch('/pages/login')
       },
+	  handleReports() {
+		  this.$tab.navigateTo('/pages/mine/reports/mineReports')
+	  },
       handleToAvatar() {
         this.$tab.navigateTo('/pages/mine/avatar/index')
       },

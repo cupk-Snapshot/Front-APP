@@ -30,7 +30,7 @@
 				<view class="img-box" v-for="(child, idx) in item.imgList" :key="idx">
 					<image :src="child.url" mode="widthFix" class="img" @tap.stop @tap="ViewImage(idx, item.imgList)"></image>
 				</view>
-			</view>
+			</view> -->
 			<view class="bottom-btn padding-bottom-sm">
 				<view class="btn-item flex-center">
 					<image class="img" src="/static/images/diary/img_say.png" mode="aspectFit"></image>
