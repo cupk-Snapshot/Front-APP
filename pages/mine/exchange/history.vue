@@ -1,15 +1,15 @@
-<template>
-	<view>
+<!-- <template>
+	<view class='content'>
 	  <view class="tui-drawer__box" v-for="(item, index) in orderList" :key="index">
 			<text>收货信息</text>
 			<view class="order-content">
 				<uni-icons type="location" size="30"></uni-icons>
 				<view class="cen">
 					<view class="top">
-						<text class="name">{{item.name}}</text>
-						<text class="mobile">{{item.mobile}}</text>
+						<text class="name">{{item.addressVo.name}}</text>
+						<text class="mobile">{{item.addressVo.phoneNum}}</text>
 					</view>
-					<text class="address">{{item.area}} {{item.address}}</text>
+					<text class="address">{{item.addressVo.area}} {{item.addressVo.address}}</text>
 				</view>
 				<uni-icons type="right" size="30"></uni-icons>
 			</view>
@@ -17,12 +17,32 @@
 		<view class="good-content">
 			<image :src="item.goodsUrl"></image>
 			<view>
-				<text class="good-name">{{item.goodsDesc}}</text>
-			    <text class="good-score">{{item.goodsScore}}积分</text>
+				<text class="good-name">{{item.title}}</text>
+			    <text class="good-score">{{item.point}}积分</text>
 			</view>
 		</view>
 		<text>兑换时间：{{item.creatTime}}</text>
 	  </view>
+	</view>
+</template> -->
+<template>
+	<view>
+		<view v-for="(item, index) in orderList">
+			<uni-card :title="订单信息" :extra="status" type="line">
+				<text class="good-name">兑换时间：{{item.createTime}}</text>
+				<text style="display: flex;">商品信息：</text>
+				<view class="imageContant">
+					<img class="image" v-if="item.picUrl" :src="item.picUrl">
+					<view>
+						<text class="good-name">兑换了一个{{item.title}}</text>
+					    <text class="good-score">消耗{{item.point}}积分</text>
+					</view>
+				</view>	
+					<text style="display: flex;">收货信息：</text>
+					<text style="display: flex;">收货人：{{item.addressVo.name}}     手机号{{item.addressVo.phoneNum}}</text>
+					<text style="display: flex;">收货地址：{{item.addressVo.area}} {{item.addressVo.address}}</text>
+			</uni-card>
+		</view>
 	</view>
 </template>
 
@@ -40,18 +60,25 @@
 		data() {
 			return {
 				orderList:[],
+				token:'',
+				user:{}
 			}
 		},
 		onLoad() {
+			this.token=uni.getStorageSync('SET_TOKEN')
+			this.user=uni.getStorageSync('user')
 			uni.request({
-				url:"",
+				url:'http://localhost:9955/user/order/all',
 				method:"GET",
 				data:{
-					user_id:userId,
+					user_id:this.user.userId,
+				},
+				header:{
+					 Authorization: 'Bearer '+this.token,
 				},
 				success: (res) => {
-					console.log(res.data),
-					orderList=res.data
+					console.log('============\n' + res.data),
+					this.orderList=res.data.data
 				}
 			})
 		}
@@ -60,12 +87,29 @@
 </script>
 
 <style scoped lang="scss">
+	.imageContant{
+		display: inline-flex;
+		
+		.good-score{
+			display: flex;
+			margin-top:20rpx;
+			color: $font-color-light;
+			.good-stock{
+				margin-left:200rpx;
+			}
+		}
+	}
+	.image{
+		width: 40%;
+		height:	auto;
+	}
 	.content {
 		box-sizing: border-box;
 		padding-bottom: 20rpx;
 		background: #fff;
 		min-width: 100vw;
 		min-height: 100vh;
+		margin-top: 50px;
 	}
 	
 	.tui-drawer__box {

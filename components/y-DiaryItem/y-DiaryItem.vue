@@ -10,13 +10,14 @@
 			<text class="color-nine">{{item.createTime}}</text>
 		</view>
 		<view class="content" @tap="toDetails(item.id)">
-			<view class="text-content">{{ item.title }}</view>
-			
+			<view class="text-content">{{ item.wfAddress }}</view>
+			<view class="text-content">{{ item.wfDesc }}</view>
+			<view class="text-content">{{ item.wfType }}</view>
 			<view class="img-wrap padding-bottom-lg">
 				<view class="img-box">
-					<image v-if="item.imgList[0]" :src="item.imgList[0].url1" mode="widthFix" class="img"></image>
-					<image v-if="item.imgList[1]" :src="item.imgList[1].url2" mode="widthFix" class="img"></image>
-					<image v-if="item.imgList[2]" :src="item.imgList[2].url3" mode="widthFix" class="img"></image>
+					<image v-if="item.imgList[0]" :src="item.imgList[0].url1" mode="aspectFill" class="img"></image>
+					<image v-if="item.imgList[1]" :src="item.imgList[1].url2" mode="aspectFill" class="img"></image>
+					<image v-if="item.imgList[2]" :src="item.imgList[2].url3" mode="aspectFill" class="img"></image>
 				</view>
 			</view>
 			
@@ -41,6 +42,8 @@
 					<text>{{ item.likeNum }}</text>
 				</view>
 			</view>
+			
+			 -->
 		</view>
 	</view>
 </template>
@@ -106,7 +109,7 @@
 		border-radius: 16px;
 	}
 	.card-item {
-		padding: 20px 30px 0px;
+		padding: 5px 20px 0px 20px;
 		background-color: #ffffff;
 		box-shadow: 0 20px 40px 0 rgba(0, 0, 0, 0.1);
 
@@ -133,9 +136,9 @@
 				}
 
 				.head-name {
-					padding-left: 40px;
+					padding-left: 20px;
 					color: #666666;
-					font-size: 20px;
+					font-size: 16px;
 				}
 			}
 
@@ -156,34 +159,23 @@
 
 		.content {
 			.text-content {
-				padding: 20px 0;
 				justify-content: space-between;
 				color: var(--mainColor);
 				font-size: 16px;
 				text-align: justify;
 			}
 
-			.img-list {
-				display: flex;
-				flex-flow: row wrap;
-
 				.img-box {
-					flex: 0 0 30%;
-					margin: 0 1% 1%;
-					display: flex;
-					align-items: center;
-					justify-content: center;
-					overflow: hidden;
 					
 					border-radius: 4px;
-					background-color: #ececec;
+					background-color: #ffffff;
 					
 					.img {
-						height: 200px;
-						width: 100%;
+						margin-right: 10px;
+						height: 100px;
+						width: 150px;
 					}
 				}
-			}
 
 			.img-wrap {
 				.img-box {

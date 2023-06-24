@@ -28,9 +28,13 @@
   export default {
     data() {
       return {
+		token: '',
         windowHeight: uni.getSystemInfoSync().windowHeight
       }
     },
+	onLoad() {
+		this.token=uni.getStorageSync('SET_TOKEN')
+	},
     methods: {
       handleToPwd() {
         this.$tab.navigateTo('/pages/mine/pwd/index')
@@ -43,9 +47,16 @@
       },
       handleLogout() {
         this.$modal.confirm('确定注销并退出系统吗？').then(() => {
-          this.$store.dispatch('LogOut').then(() => {
-            this.$tab.reLaunch('/pages/index')
-          })
+			uni.request({
+				url: 'http://localhost:9955/user/signout',
+				method: "GET",
+				header: {
+					Authorization: 'Bearer ' + this.token,
+				},
+				success: () => {
+					this.$tab.redirectTo('/pages/login')
+				}
+			})
         })
       }
     }

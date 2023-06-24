@@ -5,7 +5,7 @@
 				<view class="t-jf-points">
 					<view class="t-jf-title">我的积分</view>
 					<view class="t-jf-info">
-						<view class="t-jf-num">5000</view>
+						<view class="t-jf-num">{{allPoints}}</view>
 						<view class="t-jf-detail" hover-class="t-hc" @click="toDetail">
 							<text>积分明细</text>
 							<image src="/static/images/mine/icon-right.png"></image>
@@ -19,13 +19,14 @@
 		</view>
 		<view class="t-goods" v-if="goodsList&&goodsList.length>0">
 			<view class="t-goods-item" v-for="(item,index) in goodsList" :key="index">
-				<image class="t-goods-img" :src="item.goodsUrl"></image>
-				<view class="t-goods-title t-text-oneline">{{item.goodsDesc}}</view>
+				<image class="t-goods-img" :src="item.picUrl"></image>
+				<view class="t-goods-title t-text-oneline">{{item.title}}</view>
+				 
 				<view class="t-goods-score t-flex-row-s">
-					<text>{{item.goodsScore}}</text>
+					<text>{{item.point}}</text>
 					<text>积分</text>
 				</view>
-				<view class="t-dh t-flex-row" @click="saveChoose(item.id)"><tui-button shape="circle" shadow @click="bDrawer">我要兑换</tui-button></view>
+				<view class="t-dh t-flex-row" @click="saveChoose(item.goodsId)"><tui-button shape="circle" shadow @click="bDrawer">我要兑换</tui-button></view>
 					<tui-drawer mode="bottom" :visible="bottomDrawer" @close="closeDrawer">
 						<view class="tui-drawer__box">
 							<navigator url="/pages/mine/exchange/address_setting?source=1" class="address-section">
@@ -35,22 +36,22 @@
 									<view class="cen">
 										<view class="top">
 											<text class="name">{{addressData.name}}</text>
-											<text class="mobile">{{addressData.mobile}}</text>
+											<text class="mobile">{{addressData.phoneNum}}</text>
 										</view>
-										<text class="address">{{addressData.address}} {{addressData.addressName}}</text>
+										<text class="address">{{addressData.area}} {{addressData.address}}</text>
 									</view>
 									<uni-icons type="right" size="30"></uni-icons>
 								</view>
 							</navigator>
 							<text>详情信息</text>
 							<view class="good-content">
-								<image :src="goodinfo.goodsUrl"></image>
+								<image :src="goodinfo.picUrl"></image>
 								<view>
-									<text class="good-name">{{goodinfo.goodsDesc}}</text>
-								    <text class="good-score">{{goodinfo.goodsScore}}积分<text class="good-stock">商品库存：{{goodinfo.stocks}}</text></text>
+									<text class="good-name">{{goodinfo.title}}</text>
+								    <text class="good-score">{{goodinfo.point}}积分<text class="good-stock">商品库存：{{goodinfo.stocks}}</text></text>
 								</view>
 							</view>
-							<button class="btn-submit" @click="sureToBuy">确定</button>
+							<button class="btn-submit" @click="sureToBuy(item.goodsId,addressData.addressId)">确定</button>
 						</view>
 					</tui-drawer>
 			</view>
@@ -76,78 +77,65 @@
 			return {
 				bottomPopup: false,
 				bottomDrawer: false,
-				goodsList: [{
-						id:0,
-						goodsUrl: '/static/images/goods/1.png',
-						goodsDesc: '多功能晴雨伞一把',
-						goodsScore: 1000,
-						stocks:99,
-					},
-					{
-						id:1,
-						goodsUrl: '/static/images/goods/2.png',
-						goodsDesc: '万用充电线一条',
-						goodsScore: 3000,
-						stocks:99,
-					},
-					{
-						id:2,
-						goodsUrl: '/static/images/goods/3.png',
-						goodsDesc: '保温壶一个',
-						goodsScore: 5000,
-						stocks:99,
-					},
-					{
-						id:3,
-						goodsUrl: '/static/images/goods/4.png',
-						goodsDesc: '400ML水杯一个',
-						goodsScore: 2000,
-						stocks:99,
-					},
-					{
-						id:4,
-						goodsUrl: '/static/images/goods/5.png',
-						goodsDesc: '万用切刀一把',
-						goodsScore: 6000,
-						stocks:99,
-					},
-					{
-						id:5,
-						goodsUrl: '/static/images/goods/6.png',
-						goodsDesc: '小巧手电筒一个',
-						goodsScore: 1000,
-						stocks:99,
-					},
-					{
-						id:6,
-						goodsUrl: '/static/images/goods/7.png',
-						goodsDesc: '800ML杯子一个',
-						goodsScore: 7000,
-						stocks:99,
-					},
-					{
-						id:7,
-						goodsUrl: '/static/images/goods/8.png',
-						goodsDesc: '600ML保温杯一个',
-						goodsScore: 9000,
-						stocks:99,
-					},
-				],
+				allPoints:'',
+				goodsList: [],
 				addressData:{
-					name: 'zdy',
-					mobile: '13853984358',
-					addressName: '前锋小区',
-					address: '四川省-成都市-历城区',
-					area: '149号',
-					default: true,
+					addressId: 0,
+					name: '',
+					phoneNum: '',
+					area: '',
+					address: '',
+					isDefault: 0,
 				},
 				goodinfo:{},
 				orderData:{},
-				user:{}
+				user:{},
+				token:''
 			}
 		},
 		onLoad() {
-			this.getUser()
+			this.token=uni.getStorageSync('SET_TOKEN')
+			this.user=uni.getStorageSync('user')
+			uni.request({
+				url:'http://localhost:9955/user/goods/all',
+				method:'GET',
+				header:{
+					 Authorization: 'Bearer '+this.token,
+				},
+				success: (res) => {
+					this.goodsList=res.data.data
+				},
+			}),
+			uni.request({
+				url:'http://localhost:9955/user/points/details',
+				method:'GET',
+				header:{
+					 Authorization: 'Bearer '+this.token,
+				},
+				data: {
+					user_id: this.user.userId
+				},
+				success:(res) => {
+					this.allPoints=res.data.data.total
+				}
+			}),
+			uni.request({
+				url:'http://localhost:9955/user/address/default',
+				method:'GET',
+				header:{
+					 Authorization: 'Bearer '+this.token,
+				},
+				data: {
+					user_id: this.user.userId
+				},
+				success:(res) => {
+					this.addressData=res.data.data
+					console.log("=======================");
+					console.log(this.data.data);
+					console.log(this.addressData);
+					console.log("=======================");
+				}
+			})
 		},
 		onNavigationBarButtonTap(e) {
 				uni.navigateTo({
@@ -155,11 +143,6 @@
 				})
 			},
 		methods: {
-			getUser() {
-			  getUserProfile().then(response => {
-			    this.user = response.data
-			  })
-			},
 			//跳转积分明细
 			toDetail() {
 				uni.navigateTo({
@@ -181,17 +164,32 @@
 				var li =this.goodsList;
 				for(let j in li){
 					let itee=li[j];
-					if(itee.id===Id){
+					if(itee.goodsId===Id){
 						this.goodinfo=itee;
 					}
 				}
 			},
-			sureToBuy(){
-				this.orderData={
-					
-				};
-				console.log(orderData);
-				this.$modal.showToast('兑换成功');
+			sureToBuy(goodsId, addressId){
+				let id = uni.getStorageSync('user').userId
+				let token = uni.getStorageSync('SET_TOKEN')
+				uni.request({
+					url: "http://localhost:9955/user/goods/buy",
+					method: "POST",
+					data: {
+						user_id: id,
+						goods_id: goodsId,
+						address_id: addressId
+					},
+					header: {
+						Authorization: 'Bearer ' + token,
+						'Content-Type': 'application/x-www-form-urlencoded',
+					},
+					success: (res) => {
+						this.$modal.showToast('兑换成功');
+						this.bottomDrawer=false
+					}
+				})
+
 			}
 		}
 	}

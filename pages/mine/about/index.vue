@@ -3,7 +3,7 @@
     <view class="header-section text-center">
       <image style="width: 150rpx;height: 150rpx;" src="/static/logo200.png" mode="widthFix">
       </image>
-      <uni-title type="h2" title="若依移动端"></uni-title>
+      <uni-title type="h2" title="随手拍APP"></uni-title>
     </view>
 
     <view class="content-section">
@@ -16,22 +16,14 @@
         </view>
         <view class="list-cell list-cell-arrow">
           <view class="menu-item-box">
-            <view>官方邮箱</view>
-            <view class="text-right">ruoyi@xx.com</view>
+            <view>联系邮箱</view>
+            <view class="text-right">1337336310@qq.com</view>
           </view>
         </view>
         <view class="list-cell list-cell-arrow">
           <view class="menu-item-box">
-            <view>服务热线</view>
-            <view class="text-right">400-999-9999</view>
-          </view>
-        </view>
-        <view class="list-cell list-cell-arrow">
-          <view class="menu-item-box">
-            <view>公司网站</view>
-            <view class="text-right">
-              <uni-link :href="url" :text="url" showUnderLine="false"></uni-link>
-            </view>
+            <view>联系qq</view>
+            <view class="text-right">1337336310</view>
           </view>
         </view>
       </view>

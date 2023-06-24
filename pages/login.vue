@@ -39,7 +39,7 @@
         globalConfig: getApp().globalData.config,
         loginForm: {
           username: "",
-          password: "",
+          password: ""
         }
       }
     },
@@ -69,21 +69,6 @@
 		else {
 		  this.$modal.loading("登录中，请耐心等待...")
 		  this.pwdLogin()
-          // this.pwdLogin()
-		  // uni.request({
-			 //  url:'/api'+'/oauth/token',
-			 //  method:"POST",
-			 //  data:{
-				//   username:this.loginForm.username,
-				//   password:this.loginForm.password,
-				//   grant_type:"password",
-				//   client_id:"snapshot",
-				//   client_secret:"snapshot-secret"
-			 //  },
-			 //  success: (res) => {
-			 //  	console.log(res)
-			 //  }
-		  // })
 		  }
       },
       // 密码登录

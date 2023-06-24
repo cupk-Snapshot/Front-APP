@@ -17,7 +17,8 @@ export default {
   msgSuccess(content) {
     uni.showToast({
       title: content,
-      icon: 'success'
+      icon: 'success',
+	  duration:1500	
     })
   },
   // 隐藏消息

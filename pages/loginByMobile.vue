@@ -10,7 +10,7 @@
       </view>
       <view class="input-item flex align-center" style="width: 60%;margin: 0px;">
         <view class="iconfont icon-code icon"></view>
-        <input v-model="loginForm.code" type="number" class="input" placeholder="请输入验证码" maxlength="4" />
+        <input v-model="loginForm.code" type="number" class="input" placeholder="请输入验证码" maxlength="6" />
         <view class="login-code"> 
       		  <text class="code-text":class="{ gray: showTime }" @click="handleGetCodeClick">{{showTime ?currentCountTime+'再次获取验证码':'获取验证码'}}</text>
         </view>
@@ -42,7 +42,7 @@
         globalConfig: getApp().globalData.config,
         loginForm: {
           mobile:"",
-          code: "",
+          code: ""
         },
 		countTime: 60,
 		currentCountTime: 0,
@@ -75,52 +75,45 @@
 	  		return;
 	  	}
 	    	this.showTime = true
-	    	if(this.showTime && this.currentCountTime !== this.countTime) return
-	    	this.currentCountTime
-	  	uni.request({
-	  		url:"",
-	  		method:"POST",
-	  		data:{
-	  			mobile:this.mobile,
-	  			type:'注册发送验证码'
-	  		},
-	  		success: () => {
-	  			uni.showToast({
-	  			  title: '验证码已发送',
-	  			  icon: 'success',
-	  			  duration: 2000
-	  			})
-	  			this.timeId = setInterval(()=>{
-	  				this.currentCountTime--
-	  				if(this.currentCountTime <= 0) {
-	  					this.currentCountTime = this.countTime
-	  					this.showTime = false
-	  					clearInterval(this.timeId)
-	  				}
-	  			},1000)
-	  		},
-	  		fail: () => {
-	  			this.$modal.msgError("发送失败，请稍后再试")
-	  		}
-	  	})
+	    	if(this.showTime && this.currentCountTime !== this.countTime) return this.currentCountTime
+			uni.request({
+				url:"http://localhost:9955/oauth/sms",
+				method:"GET",
+				data:{
+					phone_num:this.loginForm.mobile
+				},
+				success: (res) => {
+					console.log(res)
+					uni.showToast({
+					  title: '验证码已发送',
+					  icon: 'success',
+					  duration: 2000
+					})
+					this.timeId = setInterval(()=>{
+						this.currentCountTime--
+						if(this.currentCountTime <= 0) {
+							this.currentCountTime = this.countTime
+							this.showTime = false
+							clearInterval(this.timeId)
+						}
+					},1000)
+				},
+				fail: () => {
+					this.$modal.msgError("发送失败，请稍后再试")
+				}
+			})
 	  },
       //手机号登录
       async mobLogin() {
-        this.$store.dispatch('Login', this.loginForm).then(() => {
+        this.$store.dispatch('LoginOn', this.loginForm).then(() => {
           this.$modal.closeLoading()
           this.loginSuccess()
-        }).catch(() => {
-          if (this.captchaEnabled) {
-            this.getCode()
-          }
         })
       },
       // 登录成功后，处理函数
       loginSuccess(result) {
         // 设置用户信息
-        this.$store.dispatch('GetInfo').then(res => {
-          this.$tab.reLaunch('/pages/index')
-        })
+        this.$tab.reLaunch('/pages/index')
       },
 	  toRegister(){
 	  		 this.$tab.navigateTo('/pages/register') 
